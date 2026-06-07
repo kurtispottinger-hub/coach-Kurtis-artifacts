@@ -1,1 +1,0 @@
-# coach-Kurtis-artifacts

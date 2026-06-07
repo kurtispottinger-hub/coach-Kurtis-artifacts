@@ -1,12 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#080808" />
-    <title>Coach Kurtis</title>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coach Kurtis | Game Intelligence Tools</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #080808; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const MAILERLITE_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiMWM4NjQ3NTQ4N2U1NzNjOTRhMDU2ZDQ4ZGVmMTNhNWRkMjkwNGU4ZDhkNTAyM2RhYzYxNTU0ZDkyNmZjZmY1YmFjNDNmYjZlZmQ4NzNkNmUiLCJpYXQiOjE3ODA1MTY2NzEuNjE3MTgzLCJuYmYiOjE3ODA1MTY2NzEuNjE3MTg2LCJleHAiOjQ5MzYxOTAyNzEuNjEwODIzLCJzdWIiOiIyMDQ1MjQ4Iiwic2NvcGVzIjpbXX0.SRATkLHYS2gfLfh5pxZnrM9lKh9ouhGrmXHBS-pbIIOIYISZixx45SlgzT-aQ1vTaqxr3zndMBPy0beyE5Bb4OmkHtAPC8ndzkLWTj591HT_ZObM42BZBF36ixorsARo6MOlUsj1gIzQwrBEjwCNTzcmsPbN8LNXwcywj2jVad_I0TACn10nWeV1Oem5no7nvj5BKEjLCpee9mnaXRBrOXd3K27-YZ4SrIqr6OcqFty0P8eOckoKuqWheIKanMwZhVqNjI9Dcyz5KLubZXUtYE3vXT03dFAH1uJHUyv76EQBaYxvcRRxgMxPYyIUov697fCZ_AyiC9xpYBVT6RYbUlh9gYr7odJcWkILLepeOOWbiFIajZL20M0XfcAxQZeoCqBzJCOZqqP2-6-LoM8fjGCU2ZrgjxE14AbdDewxHiSHg2Nd1PHzEviAgYqyzaPYhNwlSHRl0P2d1K0E_55EsOu5ziYeb9fUCpIzUf5lQX5x092n-638ytk_bF3EFxmrhIutBEev_3O2_zuIriRsv9I2lr9LQSrV4NbsVp90PxN4ZBgtaNj3i5_ZPWHlX2sP0xHuOmOMfUFobQwY27_JM9vbIX1F5ft_K9SRtIQ08NFYQ8IJFovnAygA9huyDBdV9r1d02YjerInkgTlTAXW04zS0PtC5O6ZMZxyWKD0loM";
+    const NGC_GROUP_ID = "182217535089804715";
+
+    // ─── SHARED ───────────────────────────────────────────────
+    function Logo({ sub }) {
+      return (
+        <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"28px"}}>
+          <div style={{width:"34px",height:"34px",borderRadius:"50%",background:"#000",border:"1px solid #e63329",display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <svg width="18" height="18" viewBox="0 0 20 20">
+              <circle cx="10" cy="10" r="8.5" fill="none" stroke="#e63329" strokeWidth="1.5"/>
+              <path d="M10 3.5 L12.5 7.5 L10 6 L7.5 7.5 Z" fill="#e63329" opacity="0.9"/>
+              <path d="M10 16.5 L12.5 12.5 L10 14 L7.5 12.5 Z" fill="#e63329" opacity="0.9"/>
+              <path d="M3.5 10 L7.5 7.5 L6 10 L7.5 12.5 Z" fill="#e63329" opacity="0.6"/>
+              <path d="M16.5 10 L12.5 7.5 L14 10 L12.5 12.5 Z" fill="#e63329" opacity="0.6"/>
+            </svg>
+          </div>
+          <div>
+            <div style={{color:"#fff",fontSize:"12px",fontWeight:"800",letterSpacing:"2.5px",textTransform:"uppercase"}}>Coach Kurtis</div>
+            <div style={{color:"#444",fontSize:"9px",letterSpacing:"1.5px",textTransform:"uppercase",marginTop:"1px"}}>{sub}</div>
+          </div>
+        </div>
+      );
+    }
+
+    const sharedCard = {
+      minHeight:"100vh",background:"#080808",display:"flex",alignItems:"center",
+      justifyContent:"center",padding:"24px 16px",fontFamily:"'Segoe UI',system-ui,sans-serif"
+    };
+    const card = {
+      background:"#0f0f0f",border:"1px solid #1a1a1a",borderRadius:"20px",
+      padding:"40px 36px",maxWidth:"540px",width:"100%",position:"relative",overflow:"hidden"
+    };
+    const topBar = {position:"absolute",top:0,left:0,right:0,height:"3px",background:"linear-gradient(90deg,#cc1f1f,#e63329,#ff5252)"};
+    const chip = (mb=20) => ({display:"inline-block",background:"rgba(230,51,41,0.08)",border:"1px solid rgba(230,51,41,0.25)",color:"#e63329",fontSize:"9px",letterSpacing:"2.5px",textTransform:"uppercase",padding:"5px 12px",borderRadius:"20px",marginBottom:mb,fontWeight:"700"});
+    const h1 = {color:"#fff",fontSize:"26px",fontWeight:"800",lineHeight:1.25,marginBottom:"14px",letterSpacing:"-0.5px"};
+    const body = {color:"#666",fontSize:"15px",lineHeight:1.7,marginBottom:"28px"};
+    const btn = {background:"#e63329",color:"#fff",border:"none",borderRadius:"10px",padding:"15px 28px",fontSize:"14px",fontWeight:"700",cursor:"pointer",width:"100%",letterSpacing:"0.3px"};
+    const inputStyle = (err) => ({background:"#0a0a0a",border:`1px solid ${err?"#e63329":"#1c1c1c"}`,borderRadius:"9px",padding:"13px 15px",color:"#fff",fontSize:"14px",width:"100%",outline:"none",boxSizing:"border-box",marginBottom:"4px"});
+    const label = {color:"#444",fontSize:"10px",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"7px",display:"block"};
+    const divider = {height:"1px",background:"#181818",margin:"24px 0"};
+
+    async function sendToMailerLite(formData) {
+      try {
+        await fetch("https://connect.mailerlite.com/api/subscribers", {
+          method:"POST",
+          headers:{"Content-Type":"application/json","Authorization":`Bearer ${MAILERLITE_API_KEY}`},
+          body: JSON.stringify({
+            email: formData.email, name: formData.name,
+            groups:[NGC_GROUP_ID],
+            fields:{child_name:formData.childName, child_age:formData.childAge}
+          })
+        });
+      } catch(e) { console.error(e); }
+    }
+
+    function GateForm({ onSubmit, title, sub }) {
+      const [formData, setFormData] = useState({name:"",email:"",childName:"",childAge:""});
+      const [errors, setErrors] = useState({});
+      const validate = () => {
+        const e = {};
+        if(!formData.name.trim()) e.name="Required";
+        if(!formData.email.trim()||!/\S+@\S+\.\S+/.test(formData.email)) e.email="Valid email required";
+        if(!formData.childName.trim()) e.childName="Required";
+        if(!formData.childAge.trim()) e.childAge="Required";
+        return e;
+      };
+      const handle = async () => {
+        const e = validate();
+        if(Object.keys(e).length>0){setErrors(e);return;}
+        await sendToMailerLite(formData);
+        onSubmit(formData);
+      };
+      return (
+        <div>
+          <div style={chip()}>{sub}</div>
+          <h1 style={{...h1,fontSize:"21px"}}>{title}</h1>
+          <div style={{marginBottom:"14px"}}>
+            <label style={label}>Your Name</label>
+            <input style={inputStyle(errors.name)} placeholder="Your full name" value={formData.name} onChange={e=>setFormData({...formData,name:e.target.value})}/>
+            {errors.name && <div style={{color:"#e63329",fontSize:"11px",marginBottom:"8px"}}>{errors.name}</div>}
+          </div>
+          <div style={{marginBottom:"14px"}}>
+            <label style={label}>Your Email</label>
+            <input style={inputStyle(errors.email)} placeholder="your@email.com" type="email" value={formData.email} onChange={e=>setFormData({...formData,email:e.target.value})}/>
+            {errors.email && <div style={{color:"#e63329",fontSize:"11px",marginBottom:"8px"}}>{errors.email}</div>}
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px",marginBottom:"14px"}}>
+            <div>
+              <label style={label}>Child's Name</label>
+              <input style={inputStyle(errors.childName)} placeholder="First name" value={formData.childName} onChange={e=>setFormData({...formData,childName:e.target.value})}/>
+              {errors.childName && <div style={{color:"#e63329",fontSize:"11px"}}>{errors.childName}</div>}
+            </div>
+            <div>
+              <label style={label}>Child's Age</label>
+              <input style={inputStyle(errors.childAge)} placeholder="Age" type="number" min="6" max="18" value={formData.childAge} onChange={e=>setFormData({...formData,childAge:e.target.value})}/>
+              {errors.childAge && <div style={{color:"#e63329",fontSize:"11px"}}>{errors.childAge}</div>}
+            </div>
+          </div>
+          <button style={btn} onClick={handle}>Reveal My Child's Result</button>
+          <p style={{color:"#252525",fontSize:"11px",textAlign:"center",marginTop:"12px"}}>No spam. Your details are safe with us.</p>
+        </div>
+      );
+    }
+
+    // ─── GI PROFILE ───────────────────────────────────────────
+    const giQuestions = [
+      {id:"ds1",dimension:"Decision Speed",text:"When your child receives the ball under pressure, they typically...",options:[{text:"Freeze and play it safe",score:1},{text:"Rush and make a quick decision without thinking",score:2},{text:"Take a moment then commit decisively",score:4},{text:"It depends heavily on the situation",score:3}]},
+      {id:"ds2",dimension:"Decision Speed",text:"When given a choice between a safe pass and a riskier forward option, your child usually...",options:[{text:"Always takes the safe option",score:1},{text:"Always goes for the risky option regardless",score:2},{text:"Reads the situation and chooses accordingly",score:4},{text:"Hesitates and often loses the ball while deciding",score:1}]},
+      {id:"sa1",dimension:"Scanning & Awareness",text:"Before receiving the ball, your child...",options:[{text:"Rarely looks around, reacts when it arrives",score:1},{text:"Sometimes glances but not consistently",score:2},{text:"Regularly checks their surroundings before the ball arrives",score:4},{text:"Only scans when they feel under pressure",score:2}]},
+      {id:"sa2",dimension:"Scanning & Awareness",text:"In terms of positioning and movement off the ball, your child...",options:[{text:"Tends to stand and watch play develop",score:1},{text:"Moves but often into the wrong spaces",score:2},{text:"Shows good awareness of space and moves to help teammates",score:4},{text:"Is unpredictable, good sometimes and absent others",score:2}]},
+      {id:"cp1",dimension:"Composure Under Pressure",text:"After making a mistake in a game, your child...",options:[{text:"Visibly shuts down and avoids the ball",score:1},{text:"Gets frustrated and rushes their next decision",score:2},{text:"Resets quickly and stays in the game mentally",score:4},{text:"Varies a lot depending on the importance of the game",score:2}]},
+      {id:"cp2",dimension:"Composure Under Pressure",text:"In high pressure moments, big games and tight scores, your child...",options:[{text:"Drops to a much lower level than in training",score:1},{text:"Performs similarly to normal",score:3},{text:"Sometimes raises their game",score:4},{text:"Goes quiet and lets others take responsibility",score:1}]},
+      {id:"gr1",dimension:"Game Reading",text:"When their team is struggling in a game, your child...",options:[{text:"Doesn't seem to notice or adjust",score:1},{text:"Gets louder and tries harder without a clear change in approach",score:2},{text:"Shifts their positioning or role to try to help",score:4},{text:"Looks to the coach or parent for direction",score:1}]},
+      {id:"gr2",dimension:"Game Reading",text:"In terms of understanding what the game needs from them positionally, your child...",options:[{text:"Needs constant instruction on where to be",score:1},{text:"Has a basic understanding but needs reminders",score:2},{text:"Generally positions well without being told",score:3},{text:"Shows real understanding of space and teammates' movements",score:4}]},
+    ];
+
+    const dimInfo = {
+      "Decision Speed":{short:"DS",lowNote:"With the right environment, decision speed develops quickly. This is coachable.",highNote:"Strong decision-making under pressure. A real asset in competitive football."},
+      "Scanning & Awareness":{short:"SA",lowNote:"Awareness is one of the most trainable skills in the game. Huge room for growth here.",highNote:"Excellent spatial awareness. Your child sees the game before it happens."},
+      "Composure Under Pressure":{short:"CP",lowNote:"Composure is built through environment, not instruction. This is where we focus.",highNote:"Strong mental reset ability. Performs when it matters most."},
+      "Game Reading":{short:"GR",lowNote:"Game intelligence develops through the right training environment. This is our speciality.",highNote:"Outstanding game intelligence. Reads situations most players their age miss."},
+    };
+
+    const profileTypes = [
+      {name:"The Instinctive Athlete",range:[8,14],summary:"Your child has raw athletic ability and plays on instinct. The next step is developing the intelligence layer, teaching them to read the game before reacting to it. With the right environment, this profile transforms rapidly."},
+      {name:"The Developing Thinker",range:[15,21],summary:"Your child is beginning to engage with the game intelligently but hasn't yet made it consistent. They have the foundation. What they need now is an environment that challenges their decision-making systematically."},
+      {name:"The Aware Player",range:[22,27],summary:"Your child demonstrates real game awareness and is starting to read situations well. Targeted development in their weaker dimensions will unlock the next level of their game significantly."},
+      {name:"The Game Intelligence Player",range:[28,32],summary:"Your child is operating at a high level of game intelligence for their age. They think before they react, read the game well, and perform under pressure. Precision development will take them even further."},
+    ];
+
+    function RadarChart({scores}) {
+      const size=240, center=120, maxR=85;
+      const dims = Object.keys(scores);
+      const n = dims.length;
+      const pt = (i,v,r) => {
+        const a = (Math.PI*2*i)/n - Math.PI/2;
+        return {x: center+((v/4)*r)*Math.cos(a), y: center+((v/4)*r)*Math.sin(a)};
+      };
+      const axPts = dims.map((_,i)=>{const a=(Math.PI*2*i)/n-Math.PI/2;return{x:center+maxR*Math.cos(a),y:center+maxR*Math.sin(a)};});
+      const lblPts = dims.map((d,i)=>{const a=(Math.PI*2*i)/n-Math.PI/2;const r=maxR+22;return{x:center+r*Math.cos(a),y:center+r*Math.sin(a),label:dimInfo[d].short};});
+      const sPts = dims.map((d,i)=>pt(i,scores[d],maxR));
+      const path = sPts.map((p,i)=>`${i===0?"M":"L"} ${p.x} ${p.y}`).join(" ")+" Z";
+      const grids = [1,2,3,4].map(lv=>{const ps=dims.map((_,i)=>pt(i,lv,maxR));return ps.map((p,i)=>`${i===0?"M":"L"} ${p.x} ${p.y}`).join(" ")+" Z";});
+      return (
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{display:"block",margin:"0 auto"}}>
+          {grids.map((d,i)=><path key={i} d={d} fill="none" stroke={i===3?"#333":"#1e1e1e"} strokeWidth={i===3?1.5:0.8}/>)}
+          {axPts.map((p,i)=><line key={i} x1={center} y1={center} x2={p.x} y2={p.y} stroke="#2a2a2a" strokeWidth="1"/>)}
+          <path d={path} fill="rgba(230,51,41,0.15)" stroke="#e63329" strokeWidth="2" style={{filter:"drop-shadow(0 0 8px rgba(230,51,41,0.4))"}}/>
+          {sPts.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r="5" fill="#e63329" style={{filter:"drop-shadow(0 0 4px rgba(230,51,41,0.8))"}}/>)}
+          {lblPts.map((p,i)=><text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fill="#555" fontSize="11" fontFamily="monospace" fontWeight="700">{p.label}</text>)}
+        </svg>
+      );
+    }
+
+    function GIProfile() {
+      const [screen, setScreen] = useState("welcome");
+      const [currentQ, setCurrentQ] = useState(0);
+      const [answers, setAnswers] = useState({});
+      const [formData, setFormData] = useState(null);
+      const [results, setResults] = useState(null);
+      const [sel, setSel] = useState(null);
+      const [trans, setTrans] = useState(false);
+
+      const calcResults = (fd) => {
+        const dimScores={}, dimCounts={};
+        Object.values(answers).forEach(({dimension,score})=>{
+          if(!dimScores[dimension]){dimScores[dimension]=0;dimCounts[dimension]=0;}
+          dimScores[dimension]+=score; dimCounts[dimension]++;
+        });
+        const norm={};
+        Object.keys(dimScores).forEach(d=>norm[d]=dimScores[d]/dimCounts[d]);
+        const total=Object.values(answers).reduce((s,{score})=>s+score,0);
+        const profile=profileTypes.find(p=>total>=p.range[0]&&total<=p.range[1])||profileTypes[2];
+        const strongest=Object.entries(norm).sort((a,b)=>b[1]-a[1])[0][0];
+        const weakest=Object.entries(norm).sort((a,b)=>a[1]-b[1])[0][0];
+        return {norm,profile,strongest,weakest,fd};
+      };
+
+      const handleAnswer = (score) => {
+        if(trans) return;
+        setSel(score); setTrans(true);
+        setTimeout(()=>{
+          const q=giQuestions[currentQ];
+          const newAns={...answers,[q.id]:{dimension:q.dimension,score}};
+          setAnswers(newAns);
+          if(currentQ<giQuestions.length-1){setCurrentQ(c=>c+1);setSel(null);setTrans(false);}
+          else{setScreen("gate");setSel(null);setTrans(false);}
+        },380);
+      };
+
+      const whatsappMsg = encodeURIComponent("Hi Kurtis, I just completed the Game Intelligence Profile for my child and I'd love to find out more about the GI Assessment.");
+      const waLink = `https://wa.me/447580433738?text=${whatsappMsg}`;
+      const progress = (currentQ/giQuestions.length)*100;
+
+      if(screen==="welcome") return (
+        <div style={sharedCard}>
+          <div style={card}>
+            <div style={topBar}/>
+            <Logo sub="Game Intelligence Profile"/>
+            <div style={chip()}>Free Assessment</div>
+            <h1 style={h1}>Discover Your Child's Game Intelligence Profile</h1>
+            <p style={body}>Answer 8 questions about how your child plays and thinks on the pitch. In 2 minutes you'll receive a personalised profile built on 20 years of player development, showing exactly where their game intelligence stands and where the opportunity lies.</p>
+            <button style={btn} onClick={()=>setScreen("questions")}>Start the Assessment</button>
+            <p style={{color:"#252525",fontSize:"11px",textAlign:"center",marginTop:"14px"}}>Takes 2 minutes. No football knowledge required.</p>
+          </div>
+        </div>
+      );
+
+      if(screen==="questions") {
+        const q=giQuestions[currentQ];
+        return (
+          <div style={sharedCard}>
+            <div style={card}>
+              <div style={topBar}/>
+              <Logo sub="Game Intelligence Profile"/>
+              <div style={{height:"2px",background:"#1a1a1a",borderRadius:"2px",marginBottom:"28px",overflow:"hidden"}}>
+                <div style={{height:"100%",background:"linear-gradient(90deg,#e63329,#ff5252)",width:`${progress}%`,transition:"width 0.4s ease"}}/>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
+                <span style={{color:"#e63329",fontSize:"9px",letterSpacing:"2px",textTransform:"uppercase",fontWeight:"700"}}>{q.dimension}</span>
+                <span style={{color:"#333",fontSize:"12px"}}>{currentQ+1} of {giQuestions.length}</span>
+              </div>
+              <div style={{color:"#fff",fontSize:"17px",fontWeight:"700",lineHeight:1.45,marginBottom:"22px"}}>{q.text}</div>
+              {q.options.map((opt,i)=>{
+                const isSel=sel===opt.score&&trans;
+                return (
+                  <div key={i} onClick={()=>handleAnswer(opt.score)} style={{background:isSel?"rgba(230,51,41,0.12)":"#111",border:`1px solid ${isSel?"#e63329":"#1c1c1c"}`,borderRadius:"10px",padding:"13px 16px",marginBottom:"9px",cursor:"pointer",color:isSel?"#fff":"#777",fontSize:"14px",lineHeight:1.5,display:"flex",alignItems:"center",gap:"12px",transition:"all 0.18s"}}>
+                    <div style={{width:"7px",height:"7px",borderRadius:"50%",background:isSel?"#e63329":"#222",flexShrink:0}}/>
+                    {opt.text}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+
+      if(screen==="gate") return (
+        <div style={sharedCard}>
+          <div style={card}>
+            <div style={topBar}/>
+            <Logo sub="Game Intelligence Profile"/>
+            <GateForm title="Your child's Game Intelligence Profile is ready." sub="Profile Ready" onSubmit={fd=>{setFormData(fd);setResults(calcResults(fd));setScreen("results");}}/>
+          </div>
+        </div>
+      );
+
+      if(screen==="results"&&results) {
+        const {norm,profile,strongest,weakest,fd}=results;
+        const dims=Object.keys(norm);
+        return (
+          <div style={sharedCard}>
+            <div style={{...card,maxWidth:"600px"}}>
+              <div style={topBar}/>
+              <Logo sub="Game Intelligence Profile"/>
+              <div style={chip()}>Game Intelligence Profile</div>
+              <div style={{color:"#e63329",fontSize:"22px",fontWeight:"800",letterSpacing:"-0.3px",marginBottom:"4px"}}>{profile.name}</div>
+              <div style={{color:"#555",fontSize:"12px",letterSpacing:"1px",textTransform:"uppercase",marginBottom:"20px"}}>{fd.childName}, Age {fd.childAge}</div>
+              <RadarChart scores={norm}/>
+              <div style={{textAlign:"center",marginBottom:"16px",marginTop:"8px"}}>
+                <span style={{color:"#2a2a2a",fontSize:"10px",letterSpacing:"1px"}}>DS = Decision Speed &nbsp; SA = Scanning &amp; Awareness &nbsp; CP = Composure &nbsp; GR = Game Reading</span>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"24px"}}>
+                {dims.map(d=>(
+                  <div key={d} style={{background:"#0a0a0a",border:"1px solid #1a1a1a",borderRadius:"8px",padding:"10px 12px"}}>
+                    <div style={{color:"#444",fontSize:"9px",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"4px"}}>{d}</div>
+                    <div><span style={{color:"#fff",fontSize:"20px",fontWeight:"800"}}>{norm[d].toFixed(1)}</span><span style={{color:"#2a2a2a",fontSize:"12px"}}> / 4.0</span></div>
+                  </div>
+                ))}
+              </div>
+              <div style={divider}/>
+              <div style={{background:"#0a0a0a",border:"1px solid #1a1a1a",borderRadius:"10px",padding:"20px",marginBottom:"16px"}}>
+                <p style={{color:"#777",fontSize:"14px",lineHeight:1.75,margin:0}}>{profile.summary}</p>
+              </div>
+              <div style={{background:"rgba(230,51,41,0.05)",border:"1px solid rgba(230,51,41,0.2)",borderRadius:"8px",padding:"14px 16px",marginBottom:"10px"}}>
+                <div style={{color:"#444",fontSize:"9px",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"4px"}}>Strongest Dimension</div>
+                <div style={{color:"#fff",fontSize:"14px",fontWeight:"700"}}>{strongest}</div>
+                <div style={{color:"#555",fontSize:"12px",marginTop:"4px",lineHeight:1.5}}>{dimInfo[strongest].highNote}</div>
+              </div>
+              <div style={{background:"#0a0a0a",border:"1px solid #1a1a1a",borderRadius:"8px",padding:"14px 16px",marginBottom:"24px"}}>
+                <div style={{color:"#444",fontSize:"9px",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"4px"}}>Key Development Area</div>
+                <div style={{color:"#fff",fontSize:"14px",fontWeight:"700"}}>{weakest}</div>
+                <div style={{color:"#555",fontSize:"12px",marginTop:"4px",lineHeight:1.5}}>{dimInfo[weakest].lowNote}</div>
+              </div>
+              <div style={divider}/>
+              <div style={{background:"rgba(230,51,41,0.05)",border:"1px solid rgba(230,51,41,0.15)",borderRadius:"10px",padding:"20px",marginBottom:"20px",textAlign:"center"}}>
+                <div style={{color:"#fff",fontSize:"16px",fontWeight:"700",marginBottom:"8px"}}>Ready to develop {fd.childName}'s game intelligence?</div>
+                <div style={{color:"#555",fontSize:"13px",lineHeight:1.6,marginBottom:"16px"}}>A GI Assessment is where we sit down, look at {fd.childName} specifically, and map out exactly what their development needs. Based in Birmingham, working with players aged 7 to 18.</div>
+                <a href={waLink} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"8px",background:"#25d366",color:"#fff",border:"none",borderRadius:"8px",padding:"14px 24px",fontSize:"14px",fontWeight:"700",cursor:"pointer",textDecoration:"none"}}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  Book a GI Assessment via WhatsApp
+                </a>
+              </div>
+              <p style={{color:"#1a1a1a",fontSize:"11px",textAlign:"center"}}>Coach Kurtis &nbsp; Birmingham &nbsp; coachkurtis.com</p>
+            </div>
+          </div>
+        );
+      }
+      return null;
+    }
+
+    // ─── GI BARRIER ───────────────────────────────────────────
+    const barrierQuestions = [
+      {id:"q1",text:"In matches, how does your child perform compared to training?",options:[{text:"Much quieter and less involved than in training",type:"confidence"},{text:"Makes rushed decisions they wouldn't make in training",type:"decision"},{text:"Performs similarly but lacks that extra level",type:"environment"},{text:"Good some weeks, completely off others",type:"consistency"}]},
+      {id:"q2",text:"When your child makes a mistake in a game, what usually happens next?",options:[{text:"They go quiet and avoid getting involved for a while",type:"confidence"},{text:"They rush their next action trying to make up for it",type:"decision"},{text:"They reset fairly quickly but the mistake clearly affects them",type:"environment"},{text:"It varies a lot, no real pattern",type:"consistency"}]},
+      {id:"q3",text:"How would you describe your child's decision making on the ball?",options:[{text:"They know what to do but don't back themselves to do it",type:"confidence"},{text:"They react to what is in front of them rather than reading ahead",type:"decision"},{text:"Decent decisions but they need the right environment around them",type:"environment"},{text:"Brilliant one game, completely off the next",type:"consistency"}]},
+      {id:"q4",text:"When your child plays against stronger opposition, what do you notice?",options:[{text:"They shrink and take far fewer risks than usual",type:"confidence"},{text:"They panic on the ball and stop reading the game",type:"decision"},{text:"Their level drops but so does everyone in that environment",type:"environment"},{text:"Unpredictable, sometimes they rise to it, sometimes they disappear",type:"consistency"}]},
+      {id:"q5",text:"How does your child respond to pressure from coaches or parents on the touchline?",options:[{text:"They tighten up and play even safer to avoid criticism",type:"confidence"},{text:"They try to do what they are told but stop thinking for themselves",type:"decision"},{text:"The environment around them has a big impact on how they play",type:"environment"},{text:"Seems to affect them sometimes but not others",type:"consistency"}]},
+      {id:"q6",text:"What happens when your child has a bad game?",options:[{text:"They are really hard on themselves and it affects their confidence for days",type:"confidence"},{text:"They struggle to identify what went wrong or why",type:"decision"},{text:"The mood in the car home has a big impact on how they process it",type:"environment"},{text:"Fine one week, really down the next, no consistency in how they handle it",type:"consistency"}]},
+      {id:"q7",text:"If you had to sum up what is missing, what would you say?",options:[{text:"The belief to back their ability when it matters",type:"confidence"},{text:"The ability to read the game and make the right call under pressure",type:"decision"},{text:"The right environment to bring the best out of them",type:"environment"},{text:"Consistency, they have the talent but cannot replicate it reliably",type:"consistency"}]},
+    ];
+
+    const barriers = {
+      confidence:{name:"The Confidence Barrier",icon:"🧠",tagline:"The ability is there. The belief is not yet.",description:"Your child has genuine quality but something shuts them down when it matters. They do it in training, they know what to do, but in games they take the safe option, go quiet, or disappear under pressure. This is not a talent problem. It is an environment problem. The right environment builds the belief that allows the ability to show up consistently.",insight:"Players who struggle with confidence are often in environments that reward outcomes over process. Every mistake feels final. What they need is a space where trying and failing is part of the design, not something to avoid.",cta:"Inside the Game Intelligence Lab we break down exactly why this happens and what changes it. Start free today."},
+      decision:{name:"The Decision Barrier",icon:"⚡",tagline:"They react to the game instead of reading it.",description:"Your child plays what is in front of them rather than what the game needs from them. They are not scanning before the ball arrives, not playing ahead of the situation, and not seeing the picture that would make their decisions quicker and more effective. This is the core of game intelligence and it is entirely coachable.",insight:"Most training environments reward execution. Do the drill correctly, repeat it. But games require reading and deciding, not just doing. Players who have only been trained to execute struggle when the game does not look like the drill.",cta:"The Game Intelligence Lab is built around developing exactly this. Join free and start with our video series on why players freeze and how to change it."},
+      environment:{name:"The Environment Barrier",icon:"🌍",tagline:"What surrounds your child shapes what they become.",description:"Your child's development is being shaped by more than just their sessions on the pitch. The car journey home, the reaction to mistakes, the pressure or safety they feel around them, all of it creates the environment that either unlocks their potential or limits it. You already sense this. That instinct is right.",insight:"The environment coach understands that what happens off the pitch shapes what happens on it. This is not about blame. It is about understanding how powerful the right conditions are, and how to create them.",cta:"The Game Intelligence Lab includes a Parent Playbook designed to help you become part of the solution. Join free today."},
+      consistency:{name:"The Consistency Barrier",icon:"🎯",tagline:"The potential is clear. Making it reliable is the work.",description:"You can see the quality. Everyone can. But it comes and goes. Against weaker opposition they shine, against stronger opposition they fade. Great one week, barely there the next. This inconsistency is not about effort or attitude. It is about not yet having the game intelligence framework that makes performance repeatable regardless of context.",insight:"Consistent performers are not more talented. They have a deeper understanding of what the game requires from them in any situation. That understanding is built through the right kind of development environment, not through more repetition of the same drills.",cta:"Game intelligence is what makes talent consistent. The Game Intelligence Lab is where that gets built. Join free to get started."},
+    };
+
+    const tiers = [
+      {name:"Standard",price:"Free",priceNote:"Always free",highlight:false,features:["Community access","Weekly GI breakdowns","Parent Education posts","Start Here video series","Free practices for your child"],cta:"Join Free"},
+      {name:"Premium",price:"£29",priceNote:"per month",highlight:true,features:["Everything in Standard","GI Method Course","Parent Playbook","Animated Football Sessions","Monthly live Q&A"],cta:"Join Premium"},
+      {name:"VIP",price:"£150",priceNote:"per month",highlight:false,features:["Everything in Premium","Monthly 1to1 video calls","Personalised Development Plan","Footage review and feedback","WhatsApp access throughout"],cta:"Apply for VIP",note:"5 spaces only"},
+    ];
+
+    function GIBarrier() {
+      const [screen, setScreen] = useState("welcome");
+      const [currentQ, setCurrentQ] = useState(0);
+      const [answers, setAnswers] = useState([]);
+      const [barrier, setBarrier] = useState(null);
+      const [formData, setFormData] = useState(null);
+      const [sel, setSel] = useState(null);
+      const [trans, setTrans] = useState(false);
+      const [revealed, setRevealed] = useState(false);
+
+      useEffect(()=>{if(screen==="results")setTimeout(()=>setRevealed(true),300);},[screen]);
+
+      const handleAnswer = (type) => {
+        if(trans) return;
+        setSel(type); setTrans(true);
+        setTimeout(()=>{
+          const newAns=[...answers,type];
+          setAnswers(newAns);
+          if(currentQ<barrierQuestions.length-1){setCurrentQ(c=>c+1);setSel(null);setTrans(false);}
+          else{
+            const counts=newAns.reduce((acc,t)=>{acc[t]=(acc[t]||0)+1;return acc;},{});
+            setBarrier(Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0]);
+            setScreen("gate"); setSel(null); setTrans(false);
+          }
+        },380);
+      };
+
+      const progress = (currentQ/barrierQuestions.length)*100;
+      const b = barrier ? barriers[barrier] : null;
+
+      if(screen==="welcome") return (
+        <div style={sharedCard}>
+          <div style={card}>
+            <div style={topBar}/>
+            <Logo sub="Game Intelligence Lab"/>
+            <div style={chip()}>Free Diagnostic</div>
+            <h1 style={h1}>What's Holding Your Child Back?</h1>
+            <p style={body}>Answer 7 questions about how your child performs on the pitch. In under 2 minutes you'll discover the one barrier limiting their development right now and exactly what to do about it.</p>
+            <button style={btn} onClick={()=>setScreen("questions")}>Find Out What's Holding Them Back</button>
+            <p style={{color:"#252525",fontSize:"11px",textAlign:"center",marginTop:"14px"}}>Takes 2 minutes. Written by a coach with 20 years of player development experience.</p>
+          </div>
+        </div>
+      );
+
+      if(screen==="questions") {
+        const q=barrierQuestions[currentQ];
+        return (
+          <div style={sharedCard}>
+            <div style={card}>
+              <div style={topBar}/>
+              <Logo sub="Game Intelligence Lab"/>
+              <div style={{height:"2px",background:"#1a1a1a",borderRadius:"2px",marginBottom:"28px",overflow:"hidden"}}>
+                <div style={{height:"100%",background:"linear-gradient(90deg,#e63329,#ff5252)",width:`${progress}%`,transition:"width 0.4s ease"}}/>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:"6px"}}>
+                <span style={{color:"#e63329",fontSize:"9px",letterSpacing:"2px",textTransform:"uppercase",fontWeight:"700"}}>Question {currentQ+1} of {barrierQuestions.length}</span>
+                <span style={{color:"#333",fontSize:"12px"}}>{Math.round(progress)}% complete</span>
+              </div>
+              <div style={{color:"#fff",fontSize:"17px",fontWeight:"700",lineHeight:1.45,marginBottom:"22px"}}>{q.text}</div>
+              {q.options.map((opt,i)=>{
+                const isSel=sel===opt.type&&trans;
+                return (
+                  <div key={i} onClick={()=>handleAnswer(opt.type)} style={{background:isSel?"rgba(230,51,41,0.12)":"#111",border:`1px solid ${isSel?"#e63329":"#1c1c1c"}`,borderRadius:"10px",padding:"13px 16px",marginBottom:"9px",cursor:"pointer",color:isSel?"#fff":"#777",fontSize:"14px",lineHeight:1.5,display:"flex",alignItems:"center",gap:"12px",transition:"all 0.18s"}}>
+                    <div style={{width:"7px",height:"7px",borderRadius:"50%",background:isSel?"#e63329":"#222",flexShrink:0}}/>
+                    {opt.text}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+
+      if(screen==="gate") return (
+        <div style={sharedCard}>
+          <div style={card}>
+            <div style={topBar}/>
+            <Logo sub="Game Intelligence Lab"/>
+            <GateForm title="We've identified the barrier holding your child back." sub="Your Result Is Ready" onSubmit={fd=>{setFormData(fd);setScreen("results");}}/>
+          </div>
+        </div>
+      );
+
+      if(screen==="results"&&b&&formData) return (
+        <div style={sharedCard}>
+          <div style={{...card,maxWidth:"580px",opacity:revealed?1:0,transform:revealed?"translateY(0)":"translateY(12px)",transition:"all 0.5s ease"}}>
+            <div style={topBar}/>
+            <Logo sub="Game Intelligence Lab"/>
+            <div style={chip()}>Diagnostic Complete</div>
+            <div style={{background:"rgba(230,51,41,0.06)",border:"1px solid rgba(230,51,41,0.2)",borderRadius:"14px",padding:"24px",marginBottom:"24px",textAlign:"center"}}>
+              <div style={{fontSize:"40px",marginBottom:"12px"}}>{b.icon}</div>
+              <div style={{color:"#e63329",fontSize:"10px",letterSpacing:"2.5px",textTransform:"uppercase",fontWeight:"700",marginBottom:"8px"}}>{formData.childName}'s Primary Barrier</div>
+              <div style={{color:"#fff",fontSize:"22px",fontWeight:"800",letterSpacing:"-0.3px",marginBottom:"6px"}}>{b.name}</div>
+              <div style={{color:"#555",fontSize:"14px",fontStyle:"italic"}}>{b.tagline}</div>
+            </div>
+            <div style={{background:"#0a0a0a",border:"1px solid #181818",borderRadius:"12px",padding:"20px",marginBottom:"16px"}}>
+              <div style={{color:"#444",fontSize:"9px",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"10px",fontWeight:"700"}}>What This Means</div>
+              <p style={{color:"#777",fontSize:"14px",lineHeight:1.75,margin:0}}>{b.description}</p>
+            </div>
+            <div style={{background:"#0a0a0a",border:"1px solid #181818",borderRadius:"12px",padding:"20px",marginBottom:"24px"}}>
+              <div style={{color:"#444",fontSize:"9px",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"10px",fontWeight:"700"}}>The Coach's Insight</div>
+              <p style={{color:"#555",fontSize:"14px",lineHeight:1.75,margin:0}}>{b.insight}</p>
+            </div>
+            <div style={divider}/>
+            <div style={{textAlign:"center",marginBottom:"20px"}}>
+              <div style={{color:"#fff",fontSize:"17px",fontWeight:"800",marginBottom:"6px"}}>This is exactly what the Game Intelligence Lab is built for.</div>
+              <div style={{color:"#555",fontSize:"13px",lineHeight:1.6}}>Join free today. Start with our video series on why players freeze and practical skills to work on this week. No credit card needed.</div>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px",marginBottom:"24px"}}>
+              {tiers.map((tier,i)=>(
+                <div key={i} style={{background:tier.highlight?"rgba(230,51,41,0.08)":"#0a0a0a",border:`1px solid ${tier.highlight?"rgba(230,51,41,0.35)":"#181818"}`,borderRadius:"12px",padding:"16px 12px",position:"relative",textAlign:"center"}}>
+                  {tier.highlight&&<div style={{position:"absolute",top:"-10px",left:"50%",transform:"translateX(-50%)",background:"#e63329",color:"#fff",fontSize:"8px",fontWeight:"800",letterSpacing:"1.5px",textTransform:"uppercase",padding:"3px 8px",borderRadius:"10px"}}>Most Popular</div>}
+                  <div style={{color:tier.highlight?"#fff":"#555",fontSize:"11px",fontWeight:"700",letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px"}}>{tier.name}</div>
+                  <div style={{color:tier.highlight?"#e63329":"#fff",fontSize:"20px",fontWeight:"800",marginBottom:"2px"}}>{tier.price}</div>
+                  <div style={{color:"#333",fontSize:"10px",marginBottom:"12px"}}>{tier.priceNote}</div>
+                  {tier.features.map((f,fi)=><div key={fi} style={{color:"#444",fontSize:"11px",lineHeight:1.5,marginBottom:"4px",textAlign:"left"}}>{f}</div>)}
+                  {tier.note&&<div style={{color:"#e63329",fontSize:"10px",marginTop:"8px",fontWeight:"700"}}>{tier.note}</div>}
+                </div>
+              ))}
+            </div>
+            <a href="https://www.skool.com/ngc-player-lab-5149" target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
+              <button style={{...btn,marginBottom:"10px"}}>Join the Game Intelligence Lab Free</button>
+            </a>
+            <p style={{color:"#1a1a1a",fontSize:"11px",textAlign:"center",marginTop:"8px"}}>Coach Kurtis &nbsp; Game Intelligence Lab &nbsp; coachkurtis.com</p>
+          </div>
+        </div>
+      );
+      return null;
+    }
+
+    // ─── ROUTER ───────────────────────────────────────────────
+    function App() {
+      const path = window.location.pathname;
+      if(path==="/gi-barrier") return <GIBarrier/>;
+      if(path==="/gi-profile") return <GIProfile/>;
+      return (
+        <div style={{...sharedCard}}>
+          <div style={{textAlign:"center"}}>
+            <div style={{color:"#e63329",fontSize:"11px",letterSpacing:"3px",textTransform:"uppercase",marginBottom:"12px",fontFamily:"system-ui"}}>Coach Kurtis</div>
+            <div style={{color:"#333",fontSize:"14px",fontFamily:"system-ui"}}>Game Intelligence Tools</div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App/>);
+  </script>
+</body>
 </html>

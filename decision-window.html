@@ -1,209 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>The Decision Window | Coach Kurtis</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-<style>* { margin: 0; padding: 0; box-sizing: border-box; } body { background: #080808; }</style>
+<style>* { margin: 0; padding: 0; box-sizing: border-box; } body { background: #0D0D0D; }</style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect } = React;
-// ─── DECISION WINDOW ──────────────────────────────────────
-const dwStages = [
-  {id:0,label:"INTRO",title:"The Decision Window",subtitle:"The moment that separates intelligent players from the rest",description:"Every time the ball travels toward a player, a window opens. A brief moment where everything that happens next is decided. Most players waste it. Game intelligent players own it.",color:"#CC0000"},
-  {id:1,label:"01 — READ",title:"Read",subtitle:"See the picture before the ball arrives",description:"The window opens the moment the ball leaves the previous player's foot. Before it arrives, the intelligent player is already scanning — building a picture of what is around them.",mistake:{label:"Common Mistake",text:"Standing square on. Body facing the ball directly, which cuts off the visual field. The player can only see what is in front of them — not the space, not the teammates, not the press."},fix:{label:"What Good Looks Like",text:"Side-on body position. One shoulder open to the field. This single adjustment doubles what the player can see before the ball even arrives."},color:"#CC0000",visual:"read"},
-  {id:2,label:"02 — DECIDE",title:"Decide",subtitle:"The next action is chosen before the ball arrives",description:"Reading without deciding is just watching. The intelligent player uses the picture they have built to make a decision — before the ball reaches them. The window is already closing.",mistake:{label:"Common Mistake",text:"Not having a picture before the ball arrives. The player waits for the ball to reach them before they start thinking. By then the window has closed and pressure has arrived."},fix:{label:"What Good Looks Like",text:"The decision is made in transit. By the time the ball arrives, the player already knows what they are doing next. Their first touch sets up the action they decided on before the ball got there."},color:"#CC0000",visual:"decide"},
-  {id:3,label:"03 — EXECUTE",title:"Execute",subtitle:"The right touch makes the decision possible",description:"Execution is where the decision either lives or dies. A poor first touch collapses everything that came before it — no matter how good the read or the decision was.",mistake:{label:"Common Mistake",text:"Receiving on the wrong foot when the intention is to go forward. Taking the ball on the front foot forces an extra touch, which delays the situation, invites pressure, and wastes the window entirely."},fix:{label:"What Good Looks Like",text:"Receive on the back foot when moving forward. One touch, into space, in the direction of the decision already made. The window stays open. The game moves at the player's pace, not against them."},color:"#CC0000",visual:"execute"},
-  {id:4,label:"SUMMARY",title:"Own the Window",subtitle:"Three stages. One moment. Game intelligence.",description:"The Decision Window is not a talent. It is a skill. Players who read early, decide before arrival, and execute with the right touch consistently perform above their level — in any game, against any opponent.",isSummary:true,color:"#CC0000"},
+
+const C = {
+  bg:"#0D0D0D", surface:"#111111", card:"#161616", border:"#222222",
+  red:"#CC0000", redGlow:"rgba(204,0,0,0.25)", redDim:"rgba(204,0,0,0.10)",
+  green:"#00cc66", greenDim:"rgba(0,204,102,0.10)",
+  white:"#FFFFFF", muted:"#666666", subtle:"#2a2a2a", text:"#cccccc",
+};
+
+const TABS = [
+  { id:"intro",   label:"OVERVIEW", num:"00", color:C.red      },
+  { id:"read",    label:"READ",     num:"01", color:C.red      },
+  { id:"decide",  label:"DECIDE",   num:"02", color:"#ff6b35"  },
+  { id:"execute", label:"EXECUTE",  num:"03", color:C.green    },
 ];
 
-function BodyDiagram({type}) {
-  if(type==="read") return (
-    <svg viewBox="0 0 200 220" style={{width:"100%",maxHeight:"170px"}}>
-      <rect x="10" y="10" width="180" height="200" rx="4" fill="none" stroke="#ffffff10" strokeWidth="1"/>
-      <circle cx="55" cy="80" r="14" fill="#CC000020" stroke="#CC0000" strokeWidth="1.5"/>
-      <line x1="55" y1="94" x2="55" y2="130" stroke="#CC0000" strokeWidth="2"/>
-      <line x1="35" y1="108" x2="75" y2="108" stroke="#CC0000" strokeWidth="2"/>
-      <line x1="45" y1="150" x2="55" y2="130" stroke="#CC0000" strokeWidth="2"/>
-      <line x1="65" y1="150" x2="55" y2="130" stroke="#CC0000" strokeWidth="2"/>
-      <path d="M55,80 L25,40 L85,40 Z" fill="#CC000015" stroke="#CC0000" strokeWidth="0.5" strokeDasharray="3,2"/>
-      <text x="55" y="170" textAnchor="middle" fill="#CC0000" fontSize="9" fontFamily="monospace">SQUARE ON</text>
-      <text x="55" y="182" textAnchor="middle" fill="#CC000090" fontSize="7.5" fontFamily="monospace">Limited vision</text>
-      <line x1="100" y1="20" x2="100" y2="195" stroke="#ffffff15" strokeWidth="1" strokeDasharray="4,3"/>
-      <circle cx="145" cy="80" r="14" fill="#00ff8820" stroke="#00ff88" strokeWidth="1.5"/>
-      <line x1="145" y1="94" x2="145" y2="130" stroke="#00ff88" strokeWidth="2"/>
-      <line x1="128" y1="105" x2="162" y2="111" stroke="#00ff88" strokeWidth="2"/>
-      <line x1="138" y1="150" x2="145" y2="130" stroke="#00ff88" strokeWidth="2"/>
-      <line x1="155" y1="150" x2="145" y2="130" stroke="#00ff88" strokeWidth="2"/>
-      <path d="M145,80 L100,30 L190,55 Z" fill="#00ff8812" stroke="#00ff88" strokeWidth="0.5" strokeDasharray="3,2"/>
-      <text x="145" y="170" textAnchor="middle" fill="#00ff88" fontSize="9" fontFamily="monospace">SIDE ON</text>
-      <text x="145" y="182" textAnchor="middle" fill="#00ff8890" fontSize="7.5" fontFamily="monospace">Full picture</text>
-      <text x="55" y="205" textAnchor="middle" fill="#ffffff40" fontSize="7" fontFamily="monospace">X MISTAKE</text>
-      <text x="145" y="205" textAnchor="middle" fill="#ffffff40" fontSize="7" fontFamily="monospace">✓ INTELLIGENT</text>
-    </svg>
+function AnimCard({ children, height=280 }) {
+  return (
+    <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:28,height,position:"relative",overflow:"hidden",marginBottom:24}}>
+      {children}
+    </div>
   );
-  if(type==="decide") return (
-    <svg viewBox="0 0 200 220" style={{width:"100%",maxHeight:"170px"}}>
-      <rect x="10" y="10" width="180" height="200" rx="4" fill="none" stroke="#ffffff10" strokeWidth="1"/>
-      <line x1="20" y1="110" x2="180" y2="110" stroke="#ffffff20" strokeWidth="1"/>
-      <circle cx="30" cy="110" r="7" fill="#CC0000" opacity="0.9"/>
-      <text x="30" y="128" textAnchor="middle" fill="#ffffff60" fontSize="7" fontFamily="monospace">BALL LEAVES</text>
-      <line x1="42" y1="110" x2="155" y2="110" stroke="#ffffff30" strokeWidth="1.5" strokeDasharray="5,3"/>
-      <circle cx="165" cy="110" r="12" fill="#ffffff10" stroke="#ffffff40" strokeWidth="1.5"/>
-      <rect x="42" y="75" width="113" height="25" rx="3" fill="#CC000010" stroke="#CC0000" strokeWidth="0.8" strokeDasharray="3,2"/>
-      <text x="98" y="87" textAnchor="middle" fill="#CC0000" fontSize="8" fontFamily="monospace">THE DECISION WINDOW</text>
-      <rect x="20" y="140" width="75" height="55" rx="3" fill="#CC000008" stroke="#CC000040" strokeWidth="1"/>
-      <text x="57" y="154" textAnchor="middle" fill="#CC0000" fontSize="7.5" fontFamily="monospace">X WAITS</text>
-      <text x="57" y="166" textAnchor="middle" fill="#ffffff50" fontSize="6.5" fontFamily="monospace">Ball arrives first.</text>
-      <text x="57" y="177" textAnchor="middle" fill="#ffffff50" fontSize="6.5" fontFamily="monospace">Window closed.</text>
-      <text x="57" y="188" textAnchor="middle" fill="#ffffff50" fontSize="6.5" fontFamily="monospace">Pressure arrives.</text>
-      <rect x="105" y="140" width="75" height="55" rx="3" fill="#00ff8808" stroke="#00ff8840" strokeWidth="1"/>
-      <text x="142" y="154" textAnchor="middle" fill="#00ff88" fontSize="7.5" fontFamily="monospace">✓ DECIDES</text>
-      <text x="142" y="166" textAnchor="middle" fill="#ffffff50" fontSize="6.5" fontFamily="monospace">In transit.</text>
-      <text x="142" y="177" textAnchor="middle" fill="#ffffff50" fontSize="6.5" fontFamily="monospace">Arrives knowing</text>
-      <text x="142" y="188" textAnchor="middle" fill="#ffffff50" fontSize="6.5" fontFamily="monospace">next action.</text>
-    </svg>
-  );
-  if(type==="execute") return (
-    <svg viewBox="0 0 200 220" style={{width:"100%",maxHeight:"170px"}}>
-      <rect x="10" y="10" width="180" height="200" rx="4" fill="none" stroke="#ffffff10" strokeWidth="1"/>
-      <text x="55" y="28" textAnchor="middle" fill="#CC0000" fontSize="8" fontFamily="monospace">X FRONT FOOT</text>
-      <circle cx="55" cy="55" r="11" fill="#CC000020" stroke="#CC0000" strokeWidth="1.5"/>
-      <line x1="55" y1="66" x2="55" y2="95" stroke="#CC0000" strokeWidth="2"/>
-      <line x1="38" y1="78" x2="72" y2="78" stroke="#CC0000" strokeWidth="2"/>
-      <line x1="55" y1="95" x2="45" y2="115" stroke="#CC0000" strokeWidth="2"/>
-      <line x1="55" y1="95" x2="65" y2="115" stroke="#ffffff40" strokeWidth="2"/>
-      <circle cx="38" cy="118" r="6" fill="#CC0000" opacity="0.8"/>
-      <text x="30" y="158" fill="#CC000090" fontSize="6.5" fontFamily="monospace">Extra touches.</text>
-      <text x="30" y="168" fill="#CC000090" fontSize="6.5" fontFamily="monospace">Window closed.</text>
-      <text x="30" y="178" fill="#CC000090" fontSize="6.5" fontFamily="monospace">Pressure wins.</text>
-      <line x1="100" y1="20" x2="100" y2="195" stroke="#ffffff15" strokeWidth="1" strokeDasharray="4,3"/>
-      <text x="148" y="28" textAnchor="middle" fill="#00ff88" fontSize="8" fontFamily="monospace">✓ BACK FOOT</text>
-      <circle cx="148" cy="55" r="11" fill="#00ff8820" stroke="#00ff88" strokeWidth="1.5"/>
-      <line x1="148" y1="66" x2="148" y2="95" stroke="#00ff88" strokeWidth="2"/>
-      <line x1="131" y1="78" x2="165" y2="78" stroke="#00ff88" strokeWidth="2"/>
-      <line x1="148" y1="95" x2="158" y2="115" stroke="#00ff88" strokeWidth="2.5"/>
-      <line x1="148" y1="95" x2="138" y2="115" stroke="#ffffff40" strokeWidth="2"/>
-      <circle cx="165" cy="118" r="6" fill="#00ff88" opacity="0.8"/>
-      <text x="118" y="158" fill="#00ff8890" fontSize="6.5" fontFamily="monospace">One touch.</text>
-      <text x="118" y="168" fill="#00ff8890" fontSize="6.5" fontFamily="monospace">Into space.</text>
-      <text x="118" y="178" fill="#00ff8890" fontSize="6.5" fontFamily="monospace">Window stays open.</text>
-    </svg>
-  );
-  return null;
 }
 
-function DecisionWindow() {
-  const [current, setCurrent] = useState(0);
-  const [visible, setVisible] = useState(true);
-  const stage = dwStages[current];
-
-  const goTo = (index) => {
-    if(index===current) return;
-    setVisible(false);
-    setTimeout(()=>{setCurrent(index);setVisible(true);},280);
-  };
-  const next = () => { if(current<dwStages.length-1) goTo(current+1); };
-  const prev = () => { if(current>0) goTo(current-1); };
-
+function IntroAnim() {
+  const [on, setOn] = useState(false);
+  useEffect(() => { setTimeout(() => setOn(true), 200); }, []);
   return (
-    <div style={{minHeight:"100vh",background:"#0a0a0a",display:"flex",flexDirection:"column",fontFamily:"Georgia, serif",color:"#ffffff",position:"relative"}}>
-      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 20% 20%, #CC000008 0%, transparent 50%), radial-gradient(circle at 80% 80%, #CC000005 0%, transparent 50%)",pointerEvents:"none"}}/>
-
-      {/* Top bar */}
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 32px",borderBottom:"1px solid #ffffff10",position:"relative",zIndex:2}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <div style={{width:8,height:8,borderRadius:"50%",background:"#CC0000",boxShadow:"0 0 8px #CC0000"}}/>
-          <span style={{fontSize:11,letterSpacing:3,color:"#ffffff60",fontFamily:"monospace",textTransform:"uppercase"}}>Coach Kurtis</span>
-        </div>
-        <div style={{fontSize:10,letterSpacing:2,color:"#CC0000",fontFamily:"monospace",textTransform:"uppercase"}}>Game Intelligence Framework</div>
-        <div style={{display:"flex",gap:6,alignItems:"center"}}>
-          {dwStages.map((s,i)=>(
-            <button key={i} onClick={()=>goTo(i)} style={{width:i===current?20:6,height:6,borderRadius:3,background:i===current?"#CC0000":i<current?"#CC000050":"#ffffff20",border:"none",cursor:"pointer",transition:"all 0.3s ease",padding:0}}/>
-          ))}
-        </div>
+    <AnimCard height={260}>
+      <style>{`
+        @keyframes ballTravel { 0%{left:8%;opacity:0} 15%{opacity:1} 100%{left:80%;opacity:1} }
+      `}</style>
+      <div style={{position:"absolute",bottom:70,left:"8%",right:"8%",height:2,background:C.subtle}}/>
+      <div style={{position:"absolute",bottom:62,width:20,height:20,borderRadius:"50%",background:C.red,boxShadow:`0 0 12px ${C.red}`,animation:on?"ballTravel 3s ease-in-out infinite":"none"}}/>
+      <div style={{position:"absolute",bottom:82,left:"28%",right:"24%",height:90,border:`1.5px dashed ${C.red}`,borderBottom:"none",borderRadius:"4px 4px 0 0",opacity:on?1:0,transition:"opacity 0.8s ease 0.5s"}}>
+        <div style={{position:"absolute",top:-24,left:"50%",transform:"translateX(-50%)",background:C.red,color:"#fff",fontSize:9,fontFamily:"monospace",letterSpacing:2,padding:"3px 10px",borderRadius:3,whiteSpace:"nowrap"}}>THE WINDOW</div>
       </div>
-
-      {/* Main content */}
-      <div style={{flex:1,display:"flex",flexDirection:"column",padding:"32px 48px",position:"relative",zIndex:2,transition:"opacity 0.28s ease",opacity:visible?1:0}}>
-        {stage.label && <div style={{fontSize:10,letterSpacing:4,color:"#CC0000",fontFamily:"monospace",textTransform:"uppercase",marginBottom:12}}>{stage.label}</div>}
-        <h1 style={{fontSize:stage.id===0||stage.isSummary?48:42,fontWeight:700,margin:"0 0 8px 0",lineHeight:1.1,letterSpacing:-1}}>{stage.title}</h1>
-        <p style={{fontSize:16,color:"#CC0000",margin:"0 0 20px 0",fontStyle:"italic"}}>{stage.subtitle}</p>
-        <p style={{fontSize:15,lineHeight:1.75,color:"#ffffffb0",maxWidth:600,margin:"0 0 28px 0"}}>{stage.description}</p>
-
-        {stage.visual && (
-          <div style={{display:"flex",gap:24,flex:1,alignItems:"flex-start"}}>
-            <div style={{width:200,height:200,background:"#ffffff05",border:"1px solid #ffffff15",borderRadius:8,padding:8,flexShrink:0}}>
-              <BodyDiagram type={stage.visual}/>
-            </div>
-            <div style={{display:"flex",flexDirection:"column",gap:12,flex:1}}>
-              {stage.mistake && (
-                <div style={{background:"#CC000010",border:"1px solid #CC000035",borderRadius:8,padding:"16px 20px"}}>
-                  <div style={{fontSize:9,letterSpacing:3,color:"#CC0000",fontFamily:"monospace",textTransform:"uppercase",marginBottom:8}}>X {stage.mistake.label}</div>
-                  <p style={{fontSize:13,lineHeight:1.7,color:"#ffffffa0",margin:0}}>{stage.mistake.text}</p>
-                </div>
-              )}
-              {stage.fix && (
-                <div style={{background:"#00ff8808",border:"1px solid #00ff8830",borderRadius:8,padding:"16px 20px"}}>
-                  <div style={{fontSize:9,letterSpacing:3,color:"#00ff88",fontFamily:"monospace",textTransform:"uppercase",marginBottom:8}}>✓ {stage.fix.label}</div>
-                  <p style={{fontSize:13,lineHeight:1.7,color:"#ffffffa0",margin:0}}>{stage.fix.text}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {stage.isSummary && (
-          <div>
-            <div style={{display:"flex",gap:16,marginBottom:24}}>
-              {[dwStages[1],dwStages[2],dwStages[3]].map((s,i)=>(
-                <div key={i} style={{border:`1px solid ${["#CC0000","#ff6b35","#00ff88"][i]}30`,background:`${["#CC0000","#ff6b35","#00ff88"][i]}08`,borderRadius:8,padding:"16px 20px",flex:1}}>
-                  <div style={{color:["#CC0000","#ff6b35","#00ff88"][i],fontSize:10,fontFamily:"monospace",letterSpacing:2,marginBottom:6}}>0{i+1}</div>
-                  <div style={{color:"#ffffff",fontSize:15,fontWeight:700,marginBottom:6}}>{s.title}</div>
-                  <div style={{color:"#ffffff80",fontSize:11,lineHeight:1.6}}>{s.subtitle}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{background:"#CC000015",border:"1px solid #CC000040",borderRadius:8,padding:"16px 24px",maxWidth:560}}>
-              <div style={{fontSize:9,letterSpacing:3,color:"#CC0000",fontFamily:"monospace",marginBottom:8}}>FREE RESOURCE</div>
-              <p style={{fontSize:14,lineHeight:1.7,color:"#ffffffb0",margin:0}}>Get the Decision Window cheat sheet — one page, all three stages, what to look for at the touchline. Free inside the Game Intelligence Lab.</p>
-              <div style={{marginTop:10,fontSize:11,color:"#CC0000",fontFamily:"monospace",letterSpacing:2}}>skool.com/ngc-player-lab-5149 →</div>
-            </div>
-          </div>
-        )}
-
-        {stage.id===0 && (
-          <div style={{display:"flex",gap:16,marginTop:8}}>
-            {["Read","Decide","Execute"].map((lbl,i)=>(
-              <div key={i} onClick={()=>goTo(i+1)} style={{padding:"12px 24px",border:"1px solid #ffffff20",borderRadius:6,cursor:"pointer",fontSize:13,color:"#ffffff80",fontFamily:"monospace",letterSpacing:1,background:"#ffffff05"}}>
-                0{i+1} — {lbl}
-              </div>
-            ))}
-          </div>
-        )}
+      <svg style={{position:"absolute",bottom:62,right:"8%",opacity:on?1:0,transition:"opacity 0.5s ease 0.3s"}} width="32" height="65" viewBox="0 0 32 65">
+        <circle cx="16" cy="9" r="7" fill="none" stroke={C.muted} strokeWidth="1.5"/>
+        <line x1="16" y1="16" x2="16" y2="42" stroke={C.muted} strokeWidth="2"/>
+        <line x1="5" y1="28" x2="27" y2="28" stroke={C.muted} strokeWidth="2"/>
+        <line x1="9" y1="60" x2="16" y2="42" stroke={C.muted} strokeWidth="2"/>
+        <line x1="23" y1="60" x2="16" y2="42" stroke={C.muted} strokeWidth="2"/>
+      </svg>
+      {[{l:"Ball leaves foot",p:"8%",d:"1.2s"},{l:"Read",p:"29%",d:"1.4s"},{l:"Decide",p:"46%",d:"1.6s"},{l:"Execute",p:"63%",d:"1.8s"}].map((x,i)=>(
+        <div key={i} style={{position:"absolute",bottom:24,left:x.p,fontSize:8,fontFamily:"monospace",color:C.muted,letterSpacing:1,opacity:on?1:0,transition:`opacity 0.5s ease ${x.d}`,whiteSpace:"nowrap"}}>{x.l}</div>
+      ))}
+      <div style={{position:"absolute",top:18,left:24,right:24,fontSize:12,color:C.muted,fontFamily:"monospace",letterSpacing:0.5,lineHeight:1.7,opacity:on?1:0,transition:"opacity 0.6s ease 2s"}}>
+        The window opens when the ball leaves a teammate's foot.<br/>
+        <span style={{color:C.red}}>Everything inside it determines what comes next.</span>
       </div>
+    </AnimCard>
+  );
+}
 
-      {/* Bottom nav */}
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 32px",borderTop:"1px solid #ffffff10",position:"relative",zIndex:2}}>
-        <button onClick={prev} disabled={current===0} style={{padding:"10px 24px",background:"transparent",border:"1px solid #ffffff20",color:current===0?"#ffffff20":"#ffffff60",borderRadius:4,cursor:current===0?"default":"pointer",fontSize:11,fontFamily:"monospace",letterSpacing:2}}>← PREV</button>
-        <div style={{textAlign:"center"}}>
-          <div style={{fontSize:9,letterSpacing:3,color:"#ffffff30",fontFamily:"monospace",marginBottom:4}}>{current+1} of {dwStages.length}</div>
-          <div style={{width:120,height:2,background:"#ffffff10",borderRadius:1,overflow:"hidden"}}>
-            <div style={{width:`${((current+1)/dwStages.length)*100}%`,height:"100%",background:"#CC0000",transition:"width 0.3s ease",boxShadow:"0 0 6px #CC0000"}}/>
-          </div>
+function ReadAnim() {
+  const [on, setOn] = useState(false);
+  useEffect(() => { setTimeout(() => setOn(true), 200); }, []);
+  const Player = ({x, sideOn, label, sublabel, color}) => (
+    <g>
+      {sideOn
+        ? <path d={`M${x},65 L${x-80},5 L${x+25},5 Z`} fill={`${color}12`} stroke={color} strokeWidth="0.8" strokeDasharray="4,3" style={{opacity:on?1:0,transition:"opacity 0.8s ease 1s"}}/>
+        : <path d={`M${x},65 L${x-22},5 L${x+22},5 Z`} fill={`${color}12`} stroke={color} strokeWidth="0.8" strokeDasharray="4,3" style={{opacity:on?1:0,transition:"opacity 0.8s ease 1s"}}/>
+      }
+      <circle cx={x} cy={55} r={14} fill="none" stroke={color} strokeWidth="1.5" style={{opacity:on?1:0,transition:"opacity 0.5s ease 0.3s"}}/>
+      <line x1={x} y1={69} x2={x} y2={112} stroke={color} strokeWidth="2" style={{opacity:on?1:0,transition:"opacity 0.5s ease 0.4s"}}/>
+      {sideOn
+        ? <line x1={x-20} y1={86} x2={x+20} y2={94} stroke={color} strokeWidth="2" style={{opacity:on?1:0,transition:"opacity 0.5s ease 0.5s"}}/>
+        : <line x1={x-20} y1={90} x2={x+20} y2={90} stroke={color} strokeWidth="2" style={{opacity:on?1:0,transition:"opacity 0.5s ease 0.5s"}}/>
+      }
+      <line x1={x-12} y1={140} x2={x} y2={112} stroke={color} strokeWidth="2" style={{opacity:on?1:0,transition:"opacity 0.5s ease 0.6s"}}/>
+      <line x1={x+12} y1={140} x2={x} y2={112} stroke={color} strokeWidth="2" style={{opacity:on?1:0,transition:"opacity 0.5s ease 0.6s"}}/>
+      <text x={x} y={162} textAnchor="middle" fill={color} fontSize="11" fontFamily="monospace" letterSpacing="1" style={{opacity:on?1:0}}>{label}</text>
+      <text x={x} y={177} textAnchor="middle" fill={C.muted} fontSize="9" fontFamily="monospace" style={{opacity:on?1:0}}>{sublabel}</text>
+      <text x={x} y={28} textAnchor="middle" fontSize="14" style={{opacity:on?1:0,transition:"opacity 0.5s ease 1.3s"}}>{sideOn?"✓":"✗"}</text>
+    </g>
+  );
+  return (
+    <AnimCard height={250}>
+      <svg width="100%" height="100%" viewBox="0 0 500 200" preserveAspectRatio="xMidYMid meet">
+        <line x1="250" y1="5" x2="250" y2="195" stroke={C.subtle} strokeWidth="1" strokeDasharray="4,4"/>
+        <line x1="30" y1="150" x2="220" y2="150" stroke={C.subtle} strokeWidth="1"/>
+        <line x1="280" y1="150" x2="470" y2="150" stroke={C.subtle} strokeWidth="1"/>
+        <Player x={120} sideOn={false} label="SQUARE ON" sublabel="Limited vision" color={C.red}/>
+        <Player x={380} sideOn={true}  label="SIDE ON"   sublabel="Full picture"   color={C.green}/>
+        <text x={120} y={197} textAnchor="middle" fill={C.subtle} fontSize="8" fontFamily="monospace">X MISTAKE</text>
+        <text x={380} y={197} textAnchor="middle" fill={C.subtle} fontSize="8" fontFamily="monospace">✓ INTELLIGENT</text>
+      </svg>
+    </AnimCard>
+  );
+}
+
+function DecideAnim() {
+  const [on, setOn] = useState(false);
+  useEffect(() => { setTimeout(() => setOn(true), 200); }, []);
+  return (
+    <AnimCard height={240}>
+      <style>{`@keyframes ballRoll2{0%{left:7%}100%{left:79%}}`}</style>
+      <div style={{position:"absolute",top:"50%",left:"7%",right:"7%",height:2,background:C.subtle,transform:"translateY(-50%)"}}/>
+      <div style={{position:"absolute",top:"calc(50% - 10px)",width:20,height:20,borderRadius:"50%",background:"#ff6b35",boxShadow:"0 0 10px #ff6b35",animation:on?"ballRoll2 3s ease-in-out infinite":"none"}}/>
+      <div style={{position:"absolute",top:"15%",left:"28%",width:"44%",height:"70%",border:"1.5px dashed #ff6b35",borderRadius:6,background:"rgba(255,107,53,0.06)",opacity:on?1:0,transition:"opacity 0.6s ease 0.4s"}}>
+        <div style={{position:"absolute",top:-22,left:"50%",transform:"translateX(-50%)",fontSize:9,fontFamily:"monospace",color:"#ff6b35",letterSpacing:2,whiteSpace:"nowrap"}}>DECISION WINDOW</div>
+      </div>
+      {[{l:"Ball leaves foot",p:"7%",d:"0.5s"},{l:"Window opens",p:"28%",d:"0.8s"},{l:"Window closes",p:"68%",d:"1.1s"},{l:"Ball arrives",p:"79%",d:"1.4s"}].map((x,i)=>(
+        <div key={i} style={{position:"absolute",bottom:18,left:x.p,fontSize:8,fontFamily:"monospace",color:C.muted,letterSpacing:1,whiteSpace:"nowrap",opacity:on?1:0,transition:`opacity 0.5s ease ${x.d}`}}>{x.l}</div>
+      ))}
+      <div style={{position:"absolute",top:14,left:"7%",width:"18%",background:"rgba(204,0,0,0.08)",border:"1px solid rgba(204,0,0,0.25)",borderRadius:6,padding:"6px 8px",opacity:on?1:0,transition:"opacity 0.5s ease 1.5s"}}>
+        <div style={{fontSize:8,color:C.red,fontFamily:"monospace",letterSpacing:1,marginBottom:3}}>X WAITS</div>
+        <div style={{fontSize:8,color:C.muted,lineHeight:1.5}}>Decides after arrival. Window closed. Pressure wins.</div>
+      </div>
+      <div style={{position:"absolute",top:14,right:"7%",width:"18%",background:C.greenDim,border:"1px solid rgba(0,204,102,0.25)",borderRadius:6,padding:"6px 8px",opacity:on?1:0,transition:"opacity 0.5s ease 1.8s"}}>
+        <div style={{fontSize:8,color:C.green,fontFamily:"monospace",letterSpacing:1,marginBottom:3}}>✓ DECIDES</div>
+        <div style={{fontSize:8,color:C.muted,lineHeight:1.5}}>Decides in transit. Arrives already knowing.</div>
+      </div>
+    </AnimCard>
+  );
+}
+
+function ExecuteAnim() {
+  const [on, setOn] = useState(false);
+  useEffect(() => { setTimeout(() => setOn(true), 200); }, []);
+  return (
+    <AnimCard height={260}>
+      <style>{`@keyframes arrowPulse{0%,100%{opacity:0.3}50%{opacity:1}}`}</style>
+      <svg width="100%" height="100%" viewBox="0 0 520 235" preserveAspectRatio="xMidYMid meet">
+        <line x1="260" y1="5" x2="260" y2="228" stroke={C.subtle} strokeWidth="1" strokeDasharray="4,4"/>
+        <text x="130" y="22" textAnchor="middle" fill={C.red} fontSize="10" fontFamily="monospace" letterSpacing="1">X FRONT FOOT</text>
+        <g style={{opacity:on?1:0,transition:"opacity 0.5s ease 0.3s"}}>
+          <circle cx="110" cy="55" r="13" fill="none" stroke={C.red} strokeWidth="1.5"/>
+          <line x1="110" y1="68" x2="110" y2="108" stroke={C.red} strokeWidth="2"/>
+          <line x1="90" y1="84" x2="130" y2="84" stroke={C.red} strokeWidth="2"/>
+          <line x1="110" y1="108" x2="93" y2="134" stroke={C.red} strokeWidth="2.5"/>
+          <line x1="110" y1="108" x2="127" y2="134" stroke={C.subtle} strokeWidth="2"/>
+          <circle cx="85" cy="138" r="9" fill={C.red} opacity="0.85"/>
+          <path d="M85,148 Q65,164 76,180" fill="none" stroke={C.red} strokeWidth="1.5" strokeDasharray="3,2" opacity="0.7"/>
+          <path d="M76,180 Q94,192 110,180" fill="none" stroke={C.red} strokeWidth="1.5" strokeDasharray="3,2" opacity="0.7"/>
+          <text x="80" y="210" textAnchor="middle" fill={C.red} fontSize="8" fontFamily="monospace" opacity="0.8">Extra touches. Window closed.</text>
+        </g>
+        <text x="390" y="22" textAnchor="middle" fill={C.green} fontSize="10" fontFamily="monospace" letterSpacing="1">✓ BACK FOOT</text>
+        <g style={{opacity:on?1:0,transition:"opacity 0.5s ease 0.5s"}}>
+          <circle cx="370" cy="55" r="13" fill="none" stroke={C.green} strokeWidth="1.5"/>
+          <line x1="370" y1="68" x2="370" y2="108" stroke={C.green} strokeWidth="2"/>
+          <line x1="350" y1="84" x2="390" y2="84" stroke={C.green} strokeWidth="2"/>
+          <line x1="370" y1="108" x2="353" y2="134" stroke={C.subtle} strokeWidth="2"/>
+          <line x1="370" y1="108" x2="387" y2="134" stroke={C.green} strokeWidth="2.5"/>
+          <circle cx="390" cy="138" r="9" fill={C.green} opacity="0.85"/>
+          <path d="M396,132 L445,98" fill="none" stroke={C.green} strokeWidth="2.5" style={{animation:on?"arrowPulse 1.5s ease-in-out infinite":"none"}}/>
+          <polygon points="445,93 454,103 441,106" fill={C.green} opacity="0.9"/>
+          <text x="390" y="210" textAnchor="middle" fill={C.green} fontSize="8" fontFamily="monospace" opacity="0.8">One touch. Into space. Window open.</text>
+        </g>
+        <line x1="30" y1="148" x2="240" y2="148" stroke={C.subtle} strokeWidth="1"/>
+        <line x1="280" y1="148" x2="490" y2="148" stroke={C.subtle} strokeWidth="1"/>
+      </svg>
+    </AnimCard>
+  );
+}
+
+function Bullets({ items, color }) {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:24}}>
+      {items.map((item,i) => (
+        <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start"}}>
+          <div style={{width:7,height:7,borderRadius:2,background:color,flexShrink:0,marginTop:6}}/>
+          <p style={{fontSize:15,color:C.text,lineHeight:1.75,margin:0}} dangerouslySetInnerHTML={{__html:item}}/>
         </div>
-        <button onClick={next} disabled={current===dwStages.length-1} style={{padding:"10px 24px",background:current===dwStages.length-1?"transparent":"#CC0000",border:`1px solid ${current===dwStages.length-1?"#CC000030":"#CC0000"}`,color:current===dwStages.length-1?"#CC000040":"#ffffff",borderRadius:4,cursor:current===dwStages.length-1?"default":"pointer",fontSize:11,fontFamily:"monospace",letterSpacing:2}}>NEXT →</button>
+      ))}
+    </div>
+  );
+}
+
+function Takeaway({ text, color }) {
+  return (
+    <div style={{background:"#080808",border:`1px solid ${color}40`,borderLeft:`3px solid ${color}`,borderRadius:8,padding:"16px 20px",display:"flex",gap:14,alignItems:"flex-start"}}>
+      <span style={{fontSize:22,flexShrink:0}}>💡</span>
+      <div>
+        <div style={{fontSize:9,fontFamily:"monospace",letterSpacing:2.5,color,textTransform:"uppercase",marginBottom:6}}>THE TAKEAWAY</div>
+        <p style={{fontSize:14,color:C.text,lineHeight:1.7,margin:0}}>{text}</p>
       </div>
     </div>
   );
 }
 
-function App() { return <DecisionWindow/>; }
+const SECTIONS = {
+  intro:{
+    num:"00",color:C.red,
+    headline:["The moment that separates"," intelligent players from the rest"],
+    subtitle:"Every time the ball travels toward a player, a window opens.",
+    Animation:IntroAnim,
+    bullets:[
+      "The window opens the moment the ball <strong style='color:#ffffff'>leaves a teammate's foot</strong> — not when it arrives.",
+      "Inside that window, three things must happen in sequence: Read, Decide, Execute.",
+      "Most players waste the window. They wait for the ball to arrive before they start thinking.",
+      "Game intelligent players use the window. By the time the ball arrives, <strong style='color:#ffffff'>the next action is already decided.</strong>",
+      "This is not a talent. It is a trainable skill — and the right environment either develops it or ignores it.",
+    ],
+    takeaway:"The Decision Window is not about speed. It is about using the time that already exists before the ball arrives.",
+  },
+  read:{
+    num:"01",color:C.red,
+    headline:["See the picture"," before the ball arrives"],
+    subtitle:"The window opens. The first job is to build a picture of what is around you.",
+    Animation:ReadAnim,
+    bullets:[
+      "<strong style='color:#ffffff'>Body position is the foundation.</strong> A square-on stance cuts the visual field in half before the ball even moves.",
+      "Side-on means one shoulder open to the field. This single adjustment doubles what the player can see.",
+      "The common mistake is facing the ball directly — it looks attentive but eliminates awareness of everything else.",
+      "Players who scan consistently before receiving appear to have more time. They do not. They have <strong style='color:#ffffff'>more information.</strong>",
+      "What a player sees in the moment before the ball arrives determines the quality of every decision that follows.",
+    ],
+    takeaway:"Side-on is not a technical preference. It is the physical act of opening the window.",
+  },
+  decide:{
+    num:"02",color:"#ff6b35",
+    headline:["The next action is chosen"," before the ball arrives"],
+    subtitle:"Reading without deciding is just watching. The window is already closing.",
+    Animation:DecideAnim,
+    bullets:[
+      "The most common mistake at this stage: <strong style='color:#ffffff'>not having a picture before the ball arrives.</strong>",
+      "When a player waits until the ball reaches them to start thinking, the window has already closed — pressure has arrived first.",
+      "An intelligent player decides in transit. While the ball is still travelling, the next action is already selected.",
+      "This is why intelligent players appear calm under pressure. They are not reacting. <strong style='color:#ffffff'>They have already decided.</strong>",
+      "The first touch should set up a decision already made — not begin the process of making one.",
+    ],
+    takeaway:"If the decision is still being made when the ball arrives, the window was wasted.",
+  },
+  execute:{
+    num:"03",color:C.green,
+    headline:["The right touch"," keeps the window open"],
+    subtitle:"Execution is where the decision either lives or dies.",
+    Animation:ExecuteAnim,
+    bullets:[
+      "A poor first touch collapses everything that came before it — no matter how good the read or the decision was.",
+      "<strong style='color:#ffffff'>Front foot when moving forward forces an extra touch.</strong> That touch delays the situation and invites the press.",
+      "Back foot reception when the intention is forward: one touch, into space, in the direction already decided.",
+      "The extra touch is not just a technical error. It is a sign the player did not decide before the ball arrived.",
+      "When Read, Decide and Execute work together, the game moves at <strong style='color:#ffffff'>the player's pace</strong> — not against them.",
+    ],
+    takeaway:"The back foot is not a preference. It is the execution of a decision already made in the window.",
+  },
+};
+
+function App() {
+  const [active, setActive] = useState("intro");
+  const section = SECTIONS[active];
+  const tab = TABS.find(t => t.id === active);
+  const { Animation } = section;
+
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,backgroundImage:"linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px)",backgroundSize:"28px 28px",fontFamily:"'Segoe UI',system-ui,sans-serif",color:C.white}}>
+
+      {/* HEADER */}
+      <div style={{background:"#080808",borderBottom:`1px solid ${C.border}`}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 36px 0"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:C.red,boxShadow:`0 0 8px ${C.red}`}}/>
+            <span style={{fontSize:10,letterSpacing:3,color:C.muted,fontFamily:"monospace",textTransform:"uppercase"}}>Coach Kurtis</span>
+            <span style={{color:C.subtle,fontSize:10,fontFamily:"monospace"}}>/</span>
+            <span style={{fontSize:10,letterSpacing:2,color:"#CC000090",fontFamily:"monospace",textTransform:"uppercase"}}>Game Intelligence</span>
+          </div>
+          <div style={{fontSize:9,color:C.subtle,fontFamily:"monospace",letterSpacing:2}}>coachkurtis.com</div>
+        </div>
+        <div style={{padding:"20px 36px 0"}}>
+          <h1 style={{fontSize:46,fontWeight:800,lineHeight:1.05,letterSpacing:-1.5,marginBottom:8}}>
+            The <span style={{color:C.red}}>Decision</span> Window
+          </h1>
+          <p style={{fontSize:15,color:C.muted,letterSpacing:0.2}}>
+            What happens in the seconds before your child receives the ball determines everything that comes after it.
+          </p>
+        </div>
+        <div style={{display:"flex",gap:4,padding:"16px 36px 0",overflowX:"auto"}}>
+          {TABS.map(t => {
+            const isActive = t.id === active;
+            return (
+              <button key={t.id} onClick={()=>setActive(t.id)} style={{background:isActive?C.surface:"transparent",color:isActive?C.white:"rgba(255,255,255,0.35)",border:isActive?`1px solid ${t.color}`:"1px solid rgba(255,255,255,0.1)",borderBottom:isActive?`1px solid ${C.surface}`:"1px solid rgba(255,255,255,0.1)",borderRadius:"6px 6px 0 0",padding:"8px 20px",cursor:"pointer",fontSize:10,fontFamily:"monospace",letterSpacing:1.5,fontWeight:700,whiteSpace:"nowrap",transition:"all 0.2s"}}>
+                {t.num} — {t.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* CONTENT */}
+      <div style={{padding:"36px 36px 56px",maxWidth:860,margin:"0 auto"}}>
+        <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16}}>
+          <div style={{width:48,height:48,borderRadius:8,flexShrink:0,background:tab.color,display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <span style={{fontSize:18,fontWeight:800,color:"#fff"}}>{section.num}</span>
+          </div>
+          <div>
+            <div style={{fontSize:9,fontFamily:"monospace",letterSpacing:3,color:tab.color,textTransform:"uppercase",marginBottom:4}}>SECTION {section.num}</div>
+            <h2 style={{fontSize:28,fontWeight:800,lineHeight:1.15,letterSpacing:-0.5}}>
+              <span style={{color:tab.color}}>{section.headline[0]}</span>{section.headline[1]}
+            </h2>
+          </div>
+        </div>
+        <p style={{fontSize:16,color:C.muted,marginBottom:24,fontStyle:"italic"}}>{section.subtitle}</p>
+        <Animation key={active}/>
+        <Bullets items={section.bullets} color={tab.color}/>
+        <Takeaway text={section.takeaway} color={tab.color}/>
+        {active==="execute" && (
+          <div style={{marginTop:28,background:C.redDim,border:"1px solid rgba(204,0,0,0.3)",borderRadius:8,padding:"18px 24px"}}>
+            <div style={{fontSize:9,fontFamily:"monospace",letterSpacing:2.5,color:C.red,marginBottom:8,textTransform:"uppercase"}}>Free Resource</div>
+            <p style={{fontSize:14,color:C.text,lineHeight:1.7,margin:"0 0 10px"}}>Get the Decision Window cheat sheet — one page, all three stages, what to look for at the touchline. Free inside the Game Intelligence Lab.</p>
+            <div style={{fontSize:11,color:C.red,fontFamily:"monospace",letterSpacing:1.5}}>skool.com/ngc-player-lab-5149 →</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App/>);

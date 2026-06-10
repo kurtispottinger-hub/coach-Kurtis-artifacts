@@ -1,5 +1,7 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/gi-profile", "destination": "/gi-profile.html" },
+    { "source": "/gi-barrier", "destination": "/gi-barrier.html" },
+    { "source": "/decision-window", "destination": "/decision-window.html" }
   ]
 }

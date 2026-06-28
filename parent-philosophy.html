@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Parent Philosophy — Coach Kurtis</title>
+  <meta name="description" content="Three principles to define how you support your child in football. Written by you, for you, before the season starts." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #F7F7F7;
+      color: #0D0D0D;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      background: #F7F7F7;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: #0D0D0D;
+      padding: 32px 36px 28px;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .mono-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #CC0000;
+      display: block;
+    }
+    .header h1 {
+      font-size: 30px;
+      font-weight: 900;
+      color: #FFFFFF;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .header h1 span { color: #CC0000; }
+    .header-sub {
+      font-size: 14px;
+      font-weight: 400;
+      color: #888888;
+      line-height: 1.55;
+      max-width: 500px;
+    }
+
+    /* ---- Intro ---- */
+    .intro {
+      background: #FFFFFF;
+      border-bottom: 1px solid #E8E8E8;
+      padding: 22px 36px;
+    }
+    .intro p {
+      font-size: 14px;
+      color: #555555;
+      line-height: 1.65;
+    }
+
+    /* ---- Principles ---- */
+    .principles {
+      padding: 28px 36px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .principle {
+      background: #FFFFFF;
+      border: 1px solid #E8E8E8;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .principle-header {
+      background: #0D0D0D;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .num-badge {
+      background: #CC0000;
+      color: #FFFFFF;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .principle-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1.3;
+    }
+    .principle-body {
+      padding: 20px 24px 24px;
+    }
+    .context {
+      font-size: 13px;
+      color: #888888;
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+    .write-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #CC0000;
+      display: block;
+      margin-bottom: 14px;
+    }
+    .field-wrap {
+      margin-bottom: 16px;
+    }
+    .field-wrap p {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0D0D0D;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .field-wrap input {
+      width: 100%;
+      border: none;
+      border-bottom: 1.5px solid #E8E8E8;
+      padding: 10px 4px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      color: #0D0D0D;
+      background: transparent;
+      outline: none;
+      display: block;
+      transition: border-color 0.2s;
+    }
+    .field-wrap input:focus,
+    .field-wrap input.has-value {
+      border-bottom-color: #CC0000;
+    }
+    .field-wrap input::placeholder { color: #CCCCCC; font-style: italic; }
+
+    /* ---- Progress + Download ---- */
+    .progress-block {
+      margin: 0 36px 28px;
+      padding: 24px;
+      background: #FFFFFF;
+      border: 1px solid #E8E8E8;
+      border-radius: 12px;
+    }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .progress-count {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: #888888;
+    }
+    .progress-count.done { color: #CC0000; }
+    .progress-bar-bg {
+      background: #E8E8E8;
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .progress-bar-fill {
+      background: #CC0000;
+      height: 100%;
+      width: 0%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .download-btn {
+      width: 100%;
+      background: #CCCCCC;
+      color: #FFFFFF;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 8px;
+      border: none;
+      cursor: not-allowed;
+      transition: background 0.2s;
+    }
+    .download-btn.active {
+      background: #CC0000;
+      cursor: pointer;
+    }
+    .download-btn.active:hover { background: #990000; }
+    .remaining {
+      font-size: 12px;
+      color: #888888;
+      text-align: center;
+      margin-top: 10px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* ---- Note ---- */
+    .note {
+      margin: 0 36px 28px;
+      background: #0D0D0D;
+      border-radius: 10px;
+      padding: 20px 24px;
+    }
+    .note p { font-size: 13px; color: #FFFFFF; line-height: 1.65; }
+
+    /* ---- CTA ---- */
+    .cta {
+      background: #CC0000;
+      padding: 32px 36px;
+      text-align: center;
+    }
+    .cta h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .cta p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.65;
+      max-width: 460px;
+      margin: 0 auto 20px;
+    }
+    .cta-badge {
+      display: inline-block;
+      background: #0D0D0D;
+      color: #FFFFFF;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 13px 28px;
+      border-radius: 8px;
+      letter-spacing: 1px;
+    }
+
+    /* ---- Footer ---- */
+    .footer {
+      background: #0D0D0D;
+      padding: 16px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: #555555;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .footer-year {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: #CC0000;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 600px) {
+      .header, .intro, .principles, .note, .cta, .footer { padding-left: 20px; padding-right: 20px; }
+      .principles { padding-left: 20px; padding-right: 20px; }
+      .progress-block, .note { margin-left: 20px; margin-right: 20px; }
+      .header h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <span class="mono-label">Parent Philosophy Card</span>
+      <span class="mono-label">Coach Kurtis</span>
+    </div>
+    <h1>My <span>Parent</span> Philosophy</h1>
+    <p class="header-sub">Three principles. Written by you. For you. Before the season starts.</p>
+  </div>
+
+  <!-- Intro -->
+  <div class="intro">
+    <p>Every coach has a coaching philosophy. It shapes every decision they make under pressure. You are on that touchline every weekend, making decisions under pressure too. These three prompts help you choose your principles before the moment arrives, rather than reacting when it does.</p>
+  </div>
+
+  <!-- Principles -->
+  <div class="principles">
+
+    <div class="principle">
+      <div class="principle-header">
+        <div class="num-badge">01</div>
+        <p class="principle-title">Separate your journey from your child's</p>
+      </div>
+      <div class="principle-body">
+        <p class="context">Your child's football experience belongs to them. What you hope for them and what they need from you are not always the same thing. This principle asks you to name the difference.</p>
+        <span class="write-label">Write your principle</span>
+        <div class="field-wrap">
+          <p>My role on the touchline is...</p>
+          <input type="text" id="a0" placeholder="Write your answer here" oninput="handleInput(this)" />
+        </div>
+        <div class="field-wrap">
+          <p>When things are not going my child's way, I will...</p>
+          <input type="text" id="a1" placeholder="Write your answer here" oninput="handleInput(this)" />
+        </div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-header">
+        <div class="num-badge">02</div>
+        <p class="principle-title">Be a student of the game, not a commentator</p>
+      </div>
+      <div class="principle-body">
+        <p class="context">Watching only your child through a narrow lens leads to commentary, not support. Widening to the game itself changes what you see and what you say.</p>
+        <span class="write-label">Write your principle</span>
+        <div class="field-wrap">
+          <p>Instead of watching my child and judging every touch, I will focus on...</p>
+          <input type="text" id="a2" placeholder="Write your answer here" oninput="handleInput(this)" />
+        </div>
+        <div class="field-wrap">
+          <p>The one thing I will stop saying on the touchline is...</p>
+          <input type="text" id="a3" placeholder="Write your answer here" oninput="handleInput(this)" />
+        </div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-header">
+        <div class="num-badge">03</div>
+        <p class="principle-title">Create the right environment, not the outcome</p>
+      </div>
+      <div class="principle-body">
+        <p class="context">You cannot control whether your child becomes a top player. You can control the environment around them. That includes the car journey, what happens after a bad game, and what you celebrate.</p>
+        <span class="write-label">Write your principle</span>
+        <div class="field-wrap">
+          <p>After a difficult game, the environment I want my child to come home to is...</p>
+          <input type="text" id="a4" placeholder="Write your answer here" oninput="handleInput(this)" />
+        </div>
+        <div class="field-wrap">
+          <p>The thing I want to celebrate more this season is...</p>
+          <input type="text" id="a5" placeholder="Write your answer here" oninput="handleInput(this)" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Progress + Download -->
+  <div class="progress-block">
+    <div class="progress-top">
+      <span class="mono-label" style="color:#888888; margin-bottom:0;">Your progress</span>
+      <span class="progress-count" id="progress-count">0/6 complete</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+    <button class="download-btn" id="download-btn" onclick="handleDownload()" disabled>Complete all 6 answers to save</button>
+    <p class="remaining" id="remaining-text">6 answers remaining</p>
+  </div>
+
+  <!-- Note from Kurtis -->
+  <div class="note">
+    <span class="mono-label" style="margin-bottom:8px;">A note from Coach Kurtis</span>
+    <p>You already have a philosophy. Every parent does. The difference between a conscious one and an unconscious one is enormous. An unconscious philosophy means you are reacting. A conscious one means you are choosing. Write yours down before the next game.</p>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Interested in one-to-one mentorship for your child?</h2>
+    <p>Game IQ is my remote mentorship programme for players serious about developing their game intelligence. If you want to find out if it's the right fit, send me a direct message in the community and we'll have a conversation.</p>
+    <div class="cta-badge">DM ME IN THE COMMUNITY</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="footer-text">Coach Kurtis&nbsp;&nbsp;|&nbsp;&nbsp;coachkurtis.com&nbsp;&nbsp;|&nbsp;&nbsp;Next Generation Champions Ltd</span>
+    <span class="footer-year">©2026</span>
+  </div>
+
+</div>
+
+<script>
+  const answers = ["", "", "", "", "", ""];
+
+  function handleInput(input) {
+    const idx = parseInt(input.id.replace("a", ""));
+    answers[idx] = input.value.trim();
+    input.classList.toggle("has-value", input.value.length > 0);
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const filled = answers.filter(a => a.length > 0).length;
+    const pct = (filled / 6) * 100;
+    const btn = document.getElementById("download-btn");
+    const fill = document.getElementById("progress-fill");
+    const count = document.getElementById("progress-count");
+    const remaining = document.getElementById("remaining-text");
+
+    fill.style.width = pct + "%";
+    count.textContent = filled + "/6 complete";
+    count.classList.toggle("done", filled === 6);
+
+    if (filled === 6) {
+      btn.classList.add("active");
+      btn.disabled = false;
+      btn.textContent = "Save My Philosophy (PDF)";
+      remaining.style.display = "none";
+    } else {
+      btn.classList.remove("active");
+      btn.disabled = true;
+      btn.textContent = "Complete all 6 answers to save";
+      const left = 6 - filled;
+      remaining.style.display = "block";
+      remaining.textContent = left + " answer" + (left !== 1 ? "s" : "") + " remaining";
+    }
+  }
+
+  function handleDownload() {
+    const btn = document.getElementById("download-btn");
+    btn.textContent = "Generating your PDF...";
+    btn.disabled = true;
+
+    setTimeout(() => {
+      generatePDF();
+      btn.textContent = "Save My Philosophy (PDF)";
+      btn.disabled = false;
+    }, 150);
+  }
+
+  function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pw = 210;
+    const margin = 20;
+    const contentW = pw - margin * 2;
+    let y = 0;
+
+    // Header
+    doc.setFillColor(13, 13, 13);
+    doc.rect(0, 0, 210, 52, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(204, 0, 0);
+    doc.text("PARENT PHILOSOPHY CARD", margin, 12);
+    doc.text("COACH KURTIS", pw - margin, 12, { align: "right" });
+    doc.setFontSize(22);
+    doc.setTextColor(255, 255, 255);
+    doc.text("MY PARENT PHILOSOPHY", margin, 28);
+    doc.setDrawColor(204, 0, 0);
+    doc.setLineWidth(1.2);
+    doc.line(margin, 31, margin + 80, 31);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(136, 136, 136);
+    doc.text("Three principles. Written by you. For you. Before the season starts.", margin, 43);
+    doc.setFontSize(7);
+    doc.setTextColor(204, 0, 0);
+    doc.text("coachkurtis.com", pw - margin, 43, { align: "right" });
+
+    y = 62;
+
+    // Intro
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    const introText = "Every coach has a coaching philosophy. It shapes every decision they make under pressure. You are on that touchline every weekend, making decisions under pressure too. These principles are yours, chosen before the moment arrives.";
+    const introLines = doc.splitTextToSize(introText, contentW);
+    doc.text(introLines, margin, y);
+    y += introLines.length * 5 + 10;
+
+    // Principles data
+    const principleData = [
+      {
+        num: "01", title: "Separate your journey from your child's",
+        prompts: ["My role on the touchline is...", "When things are not going my child's way, I will..."],
+        answerIndexes: [0, 1],
+      },
+      {
+        num: "02", title: "Be a student of the game, not a commentator",
+        prompts: ["Instead of watching my child and judging every touch, I will focus on...", "The one thing I will stop saying on the touchline is..."],
+        answerIndexes: [2, 3],
+      },
+      {
+        num: "03", title: "Create the right environment, not the outcome",
+        prompts: ["After a difficult game, the environment I want my child to come home to is...", "The thing I want to celebrate more this season is..."],
+        answerIndexes: [4, 5],
+      },
+    ];
+
+    principleData.forEach(p => {
+      if (y > 240) { doc.addPage(); y = 20; }
+
+      doc.setFillColor(13, 13, 13);
+      doc.roundedRect(margin, y, contentW, 12, 2, 2, "F");
+      doc.setFillColor(204, 0, 0);
+      doc.roundedRect(margin + 3, y + 2, 8, 8, 1, 1, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7);
+      doc.setTextColor(255, 255, 255);
+      doc.text(p.num, margin + 7, y + 7.5, { align: "center" });
+      doc.setFontSize(9);
+      doc.text(p.title.toUpperCase(), margin + 15, y + 7.5);
+      y += 16;
+
+      p.prompts.forEach((prompt, i) => {
+        const answer = answers[p.answerIndexes[i]] || "";
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.setTextColor(40, 40, 40);
+        const promptLines = doc.splitTextToSize(prompt, contentW);
+        doc.text(promptLines, margin, y);
+        y += promptLines.length * 4.5 + 2;
+
+        if (answer) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(9);
+          doc.setTextColor(13, 13, 13);
+          const answerLines = doc.splitTextToSize(answer, contentW);
+          doc.text(answerLines, margin, y);
+          y += answerLines.length * 4.5;
+        } else {
+          doc.setDrawColor(200, 200, 200);
+          doc.setLineWidth(0.3);
+          doc.line(margin, y + 1, margin + contentW, y + 1);
+          y += 6;
+        }
+
+        doc.setDrawColor(204, 0, 0);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, margin + 30, y);
+        y += 10;
+      });
+
+      y += 4;
+    });
+
+    // Note from Kurtis
+    if (y > 240) { doc.addPage(); y = 20; }
+    doc.setFillColor(13, 13, 13);
+    doc.roundedRect(margin, y, contentW, 28, 3, 3, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(204, 0, 0);
+    doc.text("A NOTE FROM COACH KURTIS", margin + 6, y + 8);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(255, 255, 255);
+    const noteText = "You already have a philosophy. Every parent does. The difference between a conscious one and an unconscious one is enormous. An unconscious philosophy means you are reacting. A conscious one means you are choosing.";
+    const noteLines = doc.splitTextToSize(noteText, contentW - 12);
+    doc.text(noteLines, margin + 6, y + 15);
+    y += 36;
+
+    // CTA
+    if (y > 255) { doc.addPage(); y = 20; }
+    doc.setFillColor(204, 0, 0);
+    doc.roundedRect(margin, y, contentW, 30, 3, 3, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(255, 255, 255);
+    doc.text("Interested in one-to-one mentorship for your child?", pw / 2, y + 9, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    const ctaText = "Game IQ is my remote mentorship programme for players serious about developing their game intelligence. Send me a direct message in the community and we'll have a conversation.";
+    const ctaLines = doc.splitTextToSize(ctaText, contentW - 10);
+    doc.text(ctaLines, pw / 2, y + 16, { align: "center" });
+
+    // Footer
+    doc.setFillColor(13, 13, 13);
+    doc.rect(0, 282, 210, 15, "F");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(85, 85, 85);
+    doc.text("COACH KURTIS  |  COACHKURTIS.COM  |  NEXT GENERATION CHAMPIONS LTD", margin, 291);
+    doc.setTextColor(204, 0, 0);
+    doc.text("©2026", pw - margin, 291, { align: "right" });
+
+    doc.save("My-Parent-Philosophy-Coach-Kurtis.pdf");
+  }
+</script>
+
+</body>
+</html>

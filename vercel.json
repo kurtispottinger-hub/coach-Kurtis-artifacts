@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/gi-profile", "destination": "/gi-profile.html" },
     { "source": "/gi-barrier", "destination": "/gi-barrier.html" },
-    { "source": "/decision-window", "destination": "/decision-window.html" }
+    { "source": "/decision-window", "destination": "/decision-window.html" },
+    { "source": "/5-questions-tough-match", "destination": "/5-questions-tough-match.html" }
   ]
 }

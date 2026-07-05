@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>What To Watch For: Spotting a Deep-Lying Playmaker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CC0000;
+    --red-dark: #990000;
+    --black: #0D0D0D;
+    --white: #FFFFFF;
+    --off-white: #F7F7F7;
+    --light-grey: #E8E8E8;
+    --mid-grey: #888888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--off-white);
+    color: var(--black);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--off-white);
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--black);
+    color: var(--white);
+    padding: 40px 32px 36px;
+    position: relative;
+  }
+
+  .brand-line {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--red);
+    text-align: right;
+    margin-bottom: 28px;
+  }
+
+  .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+
+  .headline {
+    font-weight: 900;
+    font-size: 34px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+
+  .headline span {
+    color: var(--red);
+  }
+
+  .subtitle {
+    color: var(--mid-grey);
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 520px;
+  }
+
+  /* INTRO */
+  .intro {
+    padding: 32px 32px 8px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .intro p {
+    margin-bottom: 14px;
+  }
+
+  /* CONTENT SECTIONS */
+  .content {
+    padding: 8px 32px 8px;
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--light-grey);
+    border-radius: 12px;
+    padding: 28px 28px 28px 24px;
+    margin-bottom: 18px;
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+
+  .badge {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+
+  .card-title {
+    font-weight: 800;
+    font-size: 19px;
+    margin-bottom: 8px;
+  }
+
+  .card-text {
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: #333;
+  }
+
+  .card-cue {
+    margin-top: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12.5px;
+    color: var(--red-dark);
+    background: #FFF3F3;
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 4px;
+  }
+
+  /* NOTE BLOCK */
+  .note {
+    margin: 24px 32px;
+    padding: 20px 22px;
+    background: var(--white);
+    border: 1px solid var(--light-grey);
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  .note strong {
+    color: var(--black);
+  }
+
+  /* CTA BLOCK */
+  .cta {
+    background: var(--red);
+    color: var(--white);
+    padding: 40px 32px;
+    margin-top: 16px;
+    text-align: left;
+  }
+
+  .cta-headline {
+    font-weight: 800;
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  .cta-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    max-width: 520px;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: var(--black);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 15px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-bottom: 16px;
+  }
+
+  .cta-url {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: #FFD6D6;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: var(--black);
+    color: var(--white);
+    padding: 24px 32px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--mid-grey);
+  }
+
+  @media print {
+    body { background: var(--white); }
+    .page { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="brand-line">COACH KURTIS</div>
+    <div class="label">Parent Observation Guide</div>
+    <div class="headline">What To Watch For: Spotting a <span>Deep-Lying Playmaker</span> In Your Child's Team</div>
+    <div class="subtitle">Five things to look for pitch-side that most parents (and a lot of coaches) miss.</div>
+  </div>
+
+  <div class="intro">
+    <p>Every team has a striker everyone watches. Hardly anyone watches the player who's actually dictating the game from deep. That player is often the most valuable one on the pitch, and the hardest to spot if you don't know what you're looking for.</p>
+    <p>Next time you're watching a match, try picking out one player and just watching for these five things. You'll start to see the game differently.</p>
+  </div>
+
+  <div class="content">
+
+    <div class="card">
+      <div class="badge">1</div>
+      <div>
+        <div class="card-title">Scanning before the ball arrives</div>
+        <div class="card-text">Watch their head, not their feet. A player with real game intelligence checks over their shoulder before the ball gets to them, not after. They already know what's around them before they have to deal with it.</div>
+        <div class="card-cue">CUE: Head turns in the 2-3 seconds before receiving</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="badge">2</div>
+      <div>
+        <div class="card-title">Playing on the half-turn</div>
+        <div class="card-text">Most young players receive the ball facing the way it came from, then have to stop and turn. A deeper thinking player receives side-on, already facing forward, ready to play in one movement.</div>
+        <div class="card-cue">CUE: Body shape is angled, not square, when the ball arrives</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="badge">3</div>
+      <div>
+        <div class="card-title">Choosing forward over safe</div>
+        <div class="card-text">Anyone can play sideways. Watch how often this player looks to play forward first, even under a bit of pressure, instead of automatically going backwards or square to keep possession.</div>
+        <div class="card-cue">CUE: First look is forward, not sideways</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="badge">4</div>
+      <div>
+        <div class="card-title">Finding the spare player quickly</div>
+        <div class="card-text">A good deep player doesn't need three or four touches to work out who's free. They see it early and get the ball there fast, before the opposition can close the gap back down.</div>
+        <div class="card-cue">CUE: Decision and pass happen inside one or two touches</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="badge">5</div>
+      <div>
+        <div class="card-title">Getting on the ball, even when it's not going well</div>
+        <div class="card-text">This is a big one. Weaker players hide when the team is under pressure. Players with real game intelligence ask for the ball more, not less, because they trust themselves to solve the problem.</div>
+        <div class="card-cue">CUE: Shows for the ball after a mistake, not just after a good moment</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <strong>A note on how this actually gets built:</strong> none of the above comes from a coach shouting instructions from the sideline. It comes from a player being put in situations, over and over, where they have to work it out for themselves. If your child is always being told exactly where to pass, they're not being given the chance to develop this. The environment has to ask the question. The player has to find the answer.
+  </div>
+
+  <div class="cta">
+    <div class="cta-headline">Ready to take the next step?</div>
+    <div class="cta-text">Join the GI Lab, our free community for players and parents. Inside, you'll also find more on Game IQ Remote, one-to-one video mentorship for players who want to build exactly this kind of game intelligence.</div>
+    <a href="https://bit.ly/gameintellab" class="cta-button">Find Out More</a>
+    <div class="cta-url">bit.ly/gameintellab</div>
+  </div>
+
+  <div class="footer">
+    COACH KURTIS &nbsp;|&nbsp; COACHKURTIS.COM &nbsp;|&nbsp; NEXT GENERATION CHAMPIONS LTD
+  </div>
+
+</div>
+</body>
+</html>

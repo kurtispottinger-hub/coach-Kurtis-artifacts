@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OIRS: A Quick Reference Card for Stepping Away at the Right Moment | Coach Kurtis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CC0000;
+    --red-dark: #990000;
+    --black: #0D0D0D;
+    --white: #FFFFFF;
+    --off-white: #F7F7F7;
+    --light-grey: #E8E8E8;
+    --mid-grey: #888888;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--off-white);
+    color: var(--black);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .header {
+    background: var(--black);
+    color: var(--white);
+    padding: 40px 32px 36px;
+  }
+  .header .brandline {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--red);
+    text-align: right;
+    font-weight: 700;
+    margin-bottom: 28px;
+  }
+  .header .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--red);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-weight: 900;
+    font-size: 34px;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .header h1 span { color: var(--red); }
+  .header p {
+    color: var(--mid-grey);
+    font-size: 16px;
+    max-width: 560px;
+  }
+
+  .intro {
+    background: var(--white);
+    padding: 28px 32px;
+    font-size: 16px;
+  }
+  .intro p { margin-bottom: 14px; }
+  .intro p:last-child { margin-bottom: 0; }
+
+  .section {
+    padding: 8px 32px;
+  }
+  .card {
+    background: var(--white);
+    border: 1px solid var(--light-grey);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+  }
+  .badge {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+  }
+  .card-body h3 {
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .card-body p { font-size: 16px; color: var(--black); }
+  .card-body .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .checklist-wrap {
+    background: var(--white);
+    margin: 0 32px 20px;
+    border: 1px solid var(--light-grey);
+    border-radius: 12px;
+    padding: 32px;
+  }
+  .checklist-wrap h3 {
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+  .check-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--light-grey);
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-dot {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    background: var(--red);
+    margin-top: 5px;
+    border-radius: 2px;
+  }
+  .check-item p { font-size: 16px; }
+  .check-item strong { font-weight: 700; }
+
+  .cta {
+    background: var(--red);
+    color: var(--white);
+    padding: 40px 32px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .cta h2 {
+    font-weight: 800;
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+  .cta p {
+    font-size: 16px;
+    max-width: 480px;
+    margin: 0 auto 24px;
+  }
+  .cta a.button {
+    display: inline-block;
+    background: var(--white);
+    color: var(--black);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 16px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-bottom: 16px;
+  }
+  .cta .url {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--white);
+    opacity: 0.85;
+    word-break: break-all;
+  }
+
+  .footer {
+    background: var(--black);
+    color: var(--white);
+    padding: 24px 32px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--mid-grey);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="brandline">COACH KURTIS</div>
+    <div class="label">Framework Card</div>
+    <h1>OIRS: A Quick Reference Card for <span>Stepping Away</span> at the Right Moment</h1>
+    <p>The four phases behind every session I run, and why the last one matters more than people think.</p>
+  </div>
+
+  <div class="intro">
+    <p>Most coaching advice focuses on what to say to a young player. This card focuses on the part that actually decides whether any of it sticks: knowing when to stop saying it.</p>
+    <p>Keep this nearby the next time you are watching a session or a match. Use it to notice which phase you are actually in, and whether you have been staying in it longer than the player needs you to.</p>
+  </div>
+
+  <div class="section">
+
+    <div class="card">
+      <div class="badge">1</div>
+      <div class="card-body">
+        <span class="tag">O</span>
+        <h3>Observe</h3>
+        <p>Watch before you speak. Notice what the player is actually doing and try to work out why, before deciding whether anything needs to be said at all.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="badge">2</div>
+      <div class="card-body">
+        <span class="tag">I</span>
+        <h3>Intervene</h3>
+        <p>Add one specific thing the player did not already have. A question works better than an answer. Keep it short enough that it does not become the new instruction they wait for.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="badge">3</div>
+      <div class="card-body">
+        <span class="tag">R</span>
+        <h3>Reinforce</h3>
+        <p>Let the player try again and name what they got right when it lands. This confirms understanding without taking the decision back off them.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="badge">4</div>
+      <div class="card-body">
+        <span class="tag">S</span>
+        <h3>Step Away</h3>
+        <p>Withdraw your voice once understanding has shown itself. This is the phase that proves whether the first three actually worked, and it is the one most adults skip.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="checklist-wrap">
+    <h3>Signs You Might Be Skipping Step Away</h3>
+
+    <div class="check-item">
+      <div class="check-dot"></div>
+      <p><strong>You are still talking during the fourth or fifth repetition</strong> of something the player already solved once on their own.</p>
+    </div>
+
+    <div class="check-item">
+      <div class="check-dot"></div>
+      <p><strong>The player looks at you after every touch</strong> before deciding whether their choice was correct.</p>
+    </div>
+
+    <div class="check-item">
+      <div class="check-dot"></div>
+      <p><strong>You feel uncomfortable staying quiet</strong>, even when the player is clearly working through the problem themselves.</p>
+    </div>
+
+    <div class="check-item">
+      <div class="check-dot"></div>
+      <p><strong>You find yourself giving the same instruction</strong> in slightly different words across several sessions or matches.</p>
+    </div>
+
+    <div class="check-item">
+      <div class="check-dot"></div>
+      <p><strong>The player performs well when you are close by</strong> and hesitates the moment you step back or go quiet.</p>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2>Ready to go deeper than this?</h2>
+    <p>This guide is one small piece of what gets covered inside the mentorship. If you want to know what that could look like for your child specifically, message me here in the Lab. Tap Message on my profile and I will walk you through it.</p>
+  </div>
+
+  <div class="footer">
+    COACH KURTIS &nbsp;|&nbsp; THE ENVIRONMENT COACH &nbsp;|&nbsp; COACHKURTIS.COM
+  </div>
+
+</div>
+</body>
+</html>

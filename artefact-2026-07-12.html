@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The New Grassroots Football Formats - Coach Kurtis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CC0000;
+    --red-dark: #990000;
+    --black: #0D0D0D;
+    --white: #FFFFFF;
+    --off-white: #F7F7F7;
+    --light-grey: #E8E8E8;
+    --mid-grey: #888888;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--off-white);
+    color: var(--black);
+    line-height: 1.5;
+  }
+  .wrapper { max-width: 720px; margin: 0 auto; background: var(--off-white); }
+
+  .header {
+    background: var(--black);
+    color: var(--white);
+    padding: 40px 32px 36px;
+    position: relative;
+  }
+  .header .brandline {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    text-align: right;
+    margin-bottom: 24px;
+  }
+  .header .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-weight: 900;
+    font-size: 32px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .header h1 span { color: var(--red); }
+  .header p {
+    color: var(--mid-grey);
+    font-size: 16px;
+    max-width: 520px;
+  }
+
+  .intro {
+    padding: 28px 32px 8px;
+    font-size: 16px;
+    color: var(--black);
+  }
+  .intro p { margin-bottom: 14px; }
+
+  .section {
+    margin: 0 32px 20px;
+    background: var(--white);
+    border: 1px solid var(--light-grey);
+    border-radius: 12px;
+    padding: 28px 32px;
+  }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .badge {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .section h2 {
+    font-weight: 800;
+    font-size: 21px;
+  }
+  .section .age-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+    margin-top: 2px;
+  }
+  .section p {
+    font-size: 15.5px;
+    margin-bottom: 10px;
+  }
+  .section p:last-child { margin-bottom: 0; }
+  .section .highlight {
+    background: var(--off-white);
+    border-left: 3px solid var(--red);
+    padding: 12px 16px;
+    font-size: 14.5px;
+    font-weight: 600;
+    margin-top: 12px;
+  }
+
+  .rules-note {
+    margin: 0 32px 20px;
+    background: var(--black);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 24px 28px;
+  }
+  .rules-note .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+  .rules-note p {
+    font-size: 15px;
+    color: var(--light-grey);
+    margin-bottom: 8px;
+  }
+  .rules-note p:last-child { margin-bottom: 0; }
+
+  .cta {
+    background: var(--red);
+    color: var(--white);
+    margin: 32px 32px 0;
+    border-radius: 12px;
+    padding: 36px 32px;
+    text-align: center;
+  }
+  .cta h2 {
+    font-weight: 800;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .cta p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #FFE5E5;
+  }
+  .cta a.button {
+    display: inline-block;
+    background: var(--white);
+    color: var(--black);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-bottom: 14px;
+  }
+  .cta .url {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: #FFE5E5;
+    word-break: break-all;
+  }
+
+  .footer {
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+    padding: 28px 32px;
+    margin-top: 32px;
+    font-size: 13px;
+  }
+  .footer .brand {
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    color: var(--mid-grey);
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <div class="brandline">COACH KURTIS</div>
+    <div class="label">Format Reference Card</div>
+    <h1>The New Grassroots Football Formats, <span>Explained</span></h1>
+    <p>A quick reference for the FA's FutureFit changes landing this season, what's changing at each age group and what it's actually building in your child.</p>
+  </div>
+
+  <div class="intro">
+    <p>From this season, grassroots football looks different at every age group. Smaller teams, smaller pitches, further up the age range than most parents expect. It's not a smaller version of the game your child is missing out on. Here's what's changing, stage by stage, and the reason behind it.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="badge">U7</div>
+      <div>
+        <h2>3v3</h2>
+        <div class="age-label">First Competitive Format</div>
+      </div>
+    </div>
+    <p>Three players a side means your child is never far from the action. At this age, involvement matters more than anything else, every touch is a small decision.</p>
+    <div class="highlight">Builds: comfort on the ball, first touches under real pressure, willingness to try.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="badge">U8-U9</div>
+      <div>
+        <h2>5v5</h2>
+        <div class="age-label">Small-Sided Football</div>
+      </div>
+    </div>
+    <p>A bit more space, a bit more structure, but still built around frequent touches and constant 1v1 and 2v2 moments rather than long spells off the ball.</p>
+    <div class="highlight">Builds: 1v1 duels, quicker decisions, the start of reading space around them.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="badge">U10-U11</div>
+      <div>
+        <h2>7v7</h2>
+        <div class="age-label">Small-Sided Football</div>
+      </div>
+    </div>
+    <p>More players, more shape, but still small enough that a hesitant player can't disappear into space for the whole match. Passing options open up alongside the individual moments.</p>
+    <div class="highlight">Builds: scanning before the ball arrives, combining with teammates, decision speed under more options.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="badge">U12-U13</div>
+      <div>
+        <h2>9v9</h2>
+        <div class="age-label">Bridging Format</div>
+      </div>
+    </div>
+    <p>The step up toward a full pitch, with enough space now to test decisions made under less pressure and more time, while still keeping numbers manageable.</p>
+    <div class="highlight">Builds: positional awareness, reading the game over longer spells, tactical understanding.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div class="badge">U14+</div>
+      <div>
+        <h2>11v11</h2>
+        <div class="age-label">Full-Sided Football</div>
+      </div>
+    </div>
+    <p>A full year later than it used to start. By this stage, players arrive with far more reps of the game's core problems already behind them, which is exactly why the bigger picture tends to make sense faster, not slower.</p>
+    <div class="highlight">Builds: everything above, now applied to the full picture of the game.</div>
+  </div>
+
+  <div class="rules-note">
+    <div class="label">Also Worth Knowing</div>
+    <p>Younger age groups no longer publish league tables. The focus stays on involvement and development rather than a Saturday morning result.</p>
+    <p>Deliberate heading is out at primary school ages, in line with the FA's heading guidance.</p>
+    <p>At U7 3v3, every player is on the pitch for the whole match, no substitutes sat out waiting for a turn.</p>
+  </div>
+
+  <div class="cta">
+    <h2>Want more of this?</h2>
+    <p>The Game Intelligence Lab is a free community for parents and players who want to understand what's actually happening in a match, not just the scoreline. Come and see how these changes play out session by session.</p>
+    <a class="button" href="https://bit.ly/gameintellab">Join the GI Lab - It's Free</a>
+    <div class="url">https://bit.ly/gameintellab</div>
+  </div>
+
+  <div class="footer">
+    <div>Coach Kurtis | coachkurtis.com | Next Generation Champions Ltd</div>
+    <div class="brand" style="margin-top: 8px;">THE ENVIRONMENT COACH</div>
+  </div>
+
+</div>
+</body>
+</html>

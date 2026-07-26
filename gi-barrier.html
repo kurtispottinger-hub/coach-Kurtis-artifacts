@@ -13,8 +13,6 @@
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect } = React;
-const MAILERLITE_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiMWM4NjQ3NTQ4N2U1NzNjOTRhMDU2ZDQ4ZGVmMTNhNWRkMjkwNGU4ZDhkNTAyM2RhYzYxNTU0ZDkyNmZjZmY1YmFjNDNmYjZlZmQ4NzNkNmUiLCJpYXQiOjE3ODA1MTY2NzEuNjE3MTgzLCJuYmYiOjE3ODA1MTY2NzEuNjE3MTg2LCJleHAiOjQ5MzYxOTAyNzEuNjEwODIzLCJzdWIiOiIyMDQ1MjQ4Iiwic2NvcGVzIjpbXX0.SRATkLHYS2gfLfh5pxZnrM9lKh9ouhGrmXHBS-pbIIOIYISZixx45SlgzT-aQ1vTaqxr3zndMBPy0beyE5Bb4OmkHtAPC8ndzkLWTj591HT_ZObM42BZBF36ixorsARo6MOlUsj1gIzQwrBEjwCNTzcmsPbN8LNXwcywj2jVad_I0TACn10nWeV1Oem5no7nvj5BKEjLCpee9mnaXRBrOXd3K27-YZ4SrIqr6OcqFty0P8eOckoKuqWheIKanMwZhVqNjI9Dcyz5KLubZXUtYE3vXT03dFAH1uJHUyv76EQBaYxvcRRxgMxPYyIUov697fCZ_AyiC9xpYBVT6RYbUlh9gYr7odJcWkILLepeOOWbiFIajZL20M0XfcAxQZeoCqBzJCOZqqP2-6-LoM8fjGCU2ZrgjxE14AbdDewxHiSHg2Nd1PHzEviAgYqyzaPYhNwlSHRl0P2d1K0E_55EsOu5ziYeb9fUCpIzUf5lQX5x092n-638ytk_bF3EFxmrhIutBEev_3O2_zuIriRsv9I2lr9LQSrV4NbsVp90PxN4ZBgtaNj3i5_ZPWHlX2sP0xHuOmOMfUFobQwY27_JM9vbIX1F5ft_K9SRtIQ08NFYQ8IJFovnAygA9huyDBdV9r1d02YjerInkgTlTAXW04zS0PtC5O6ZMZxyWKD0loM";
-const NGC_GROUP_ID = "182217535089804715";
 
 // ─── SHARED ───────────────────────────────────────────────
 function Logo({ sub }) {
@@ -48,17 +46,17 @@ const inputStyle = (err) => ({background:"#0a0a0a",border:`1px solid ${err?"#e63
 const label = {color:"#444",fontSize:"10px",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"7px",display:"block"};
 const divider = {height:"1px",background:"#181818",margin:"24px 0"};
 
-async function sendToMailerLite(formData) {
+async function sendToMailerLite(formData, barrierName) {
   try {
-    await fetch("https://connect.mailerlite.com/api/subscribers", {
+    await fetch("/api/subscribe", {
       method:"POST",
-      headers:{"Content-Type":"application/json","Authorization":`Bearer ${MAILERLITE_API_KEY}`},
-      body: JSON.stringify({email:formData.email,name:formData.name,groups:[NGC_GROUP_ID],fields:{child_name:formData.childName,child_age:formData.childAge}})
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({email:formData.email,name:formData.name,child_name:formData.childName,child_age:formData.childAge,barrier:barrierName||""})
     });
   } catch(e) { console.error(e); }
 }
 
-function GateForm({ onSubmit, title, sub }) {
+function GateForm({ onSubmit, title, sub, barrierType }) {
   const [formData, setFormData] = useState({name:"",email:"",childName:"",childAge:""});
   const [errors, setErrors] = useState({});
   const validate = () => {
@@ -72,7 +70,7 @@ function GateForm({ onSubmit, title, sub }) {
   const handle = async () => {
     const e = validate();
     if(Object.keys(e).length>0){setErrors(e);return;}
-    await sendToMailerLite(formData);
+    await sendToMailerLite(formData, barrierType);
     onSubmit(formData);
   };
   return (
@@ -201,7 +199,7 @@ function GIBarrier() {
   if(screen==="gate") return (
     <div style={sharedCard}><div style={card}><div style={topBar}/>
       <Logo sub="Game Intelligence Lab"/>
-      <GateForm title="We've identified the barrier holding your child back." sub="Your Result Is Ready" onSubmit={fd=>{setFormData(fd);setScreen("results");}}/>
+      <GateForm title="We've identified the barrier holding your child back." sub="Your Result Is Ready" barrierType={b?b.name:""} onSubmit={fd=>{setFormData(fd);setScreen("results");}}/>
     </div></div>
   );
 
@@ -223,25 +221,29 @@ function GIBarrier() {
         <div style={{color:"#444",fontSize:"9px",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"10px",fontWeight:"700"}}>The Coach's Insight</div>
         <p style={{color:"#555",fontSize:"14px",lineHeight:1.75,margin:0}}>{b.insight}</p>
       </div>
-      <div style={divider}/>
-      <div style={{textAlign:"center",marginBottom:"20px"}}>
-        <div style={{color:"#fff",fontSize:"17px",fontWeight:"800",marginBottom:"6px"}}>This is exactly what the Game Intelligence Lab is built for.</div>
-        <div style={{color:"#555",fontSize:"13px",lineHeight:1.6}}>Join free today. Start with our video series on why players freeze and practical skills to work on this week. No credit card needed.</div>
+      <div style={{background:"rgba(230,51,41,0.06)",border:"1px solid rgba(230,51,41,0.25)",borderRadius:"14px",padding:"24px",marginBottom:"16px",textAlign:"center"}}>
+        <div style={{color:"#e63329",fontSize:"10px",letterSpacing:"2.5px",textTransform:"uppercase",fontWeight:"700",marginBottom:"10px"}}>Your Next Step</div>
+        <div style={{color:"#fff",fontSize:"18px",fontWeight:"800",marginBottom:"10px",lineHeight:1.4}}>Book {formData.childName}'s Free Player Intelligence Review</div>
+        <div style={{color:"#888",fontSize:"13px",lineHeight:1.7,marginBottom:"18px"}}>A 20 minute call with Coach Kurtis to talk through {formData.childName}'s {b.name.toLowerCase()} and what closing it actually looks like. No hard sell, no obligation.</div>
+        <a href={`https://calendly.com/coachkurtis?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}&a1=${encodeURIComponent(b.name+" \u2014 "+formData.childName+", age "+formData.childAge)}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
+          <button style={btn}>Book My Free Player Intelligence Review</button>
+        </a>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px",marginBottom:"24px"}}>
+      <div style={divider}/>
+      <div style={{textAlign:"center",marginBottom:"16px"}}>
+        <div style={{color:"#777",fontSize:"13px",fontWeight:"700",marginBottom:"4px"}}>Not ready for a call yet?</div>
+        <div style={{color:"#444",fontSize:"12px",lineHeight:1.6}}>Start free inside the Game Intelligence Lab instead.</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"8px",marginBottom:"16px"}}>
         {tiers.map((tier,i)=>(
-          <div key={i} style={{background:tier.highlight?"rgba(230,51,41,0.08)":"#0a0a0a",border:`1px solid ${tier.highlight?"rgba(230,51,41,0.35)":"#181818"}`,borderRadius:"12px",padding:"16px 12px",position:"relative",textAlign:"center"}}>
-            {tier.highlight&&<div style={{position:"absolute",top:"-10px",left:"50%",transform:"translateX(-50%)",background:"#e63329",color:"#fff",fontSize:"8px",fontWeight:"800",letterSpacing:"1.5px",textTransform:"uppercase",padding:"3px 8px",borderRadius:"10px"}}>Most Popular</div>}
-            <div style={{color:tier.highlight?"#fff":"#555",fontSize:"11px",fontWeight:"700",letterSpacing:"1px",textTransform:"uppercase",marginBottom:"6px"}}>{tier.name}</div>
-            <div style={{color:tier.highlight?"#e63329":"#fff",fontSize:"20px",fontWeight:"800",marginBottom:"2px"}}>{tier.price}</div>
-            <div style={{color:"#333",fontSize:"10px",marginBottom:"12px"}}>{tier.priceNote}</div>
-            {tier.features.map((f,fi)=><div key={fi} style={{color:"#444",fontSize:"11px",lineHeight:1.5,marginBottom:"4px",textAlign:"left"}}>{f}</div>)}
-            {tier.note&&<div style={{color:"#e63329",fontSize:"10px",marginTop:"8px",fontWeight:"700"}}>{tier.note}</div>}
+          <div key={i} style={{background:"#0a0a0a",border:"1px solid #181818",borderRadius:"10px",padding:"12px 8px",textAlign:"center"}}>
+            <div style={{color:"#555",fontSize:"9px",fontWeight:"700",letterSpacing:"0.5px",textTransform:"uppercase",marginBottom:"4px"}}>{tier.name}</div>
+            <div style={{color:"#666",fontSize:"14px",fontWeight:"800"}}>{tier.price}</div>
           </div>
         ))}
       </div>
       <a href="https://www.skool.com/ngc-player-lab-5149" target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
-        <button style={{...btn,marginBottom:"10px"}}>Join the Game Intelligence Lab Free</button>
+        <button style={{...btn,background:"transparent",border:"1px solid #2a2a2a",color:"#888",marginBottom:"10px"}}>Join the Game Intelligence Lab Free</button>
       </a>
       <p style={{color:"#1a1a1a",fontSize:"11px",textAlign:"center",marginTop:"8px"}}>Coach Kurtis &nbsp; Game Intelligence Lab &nbsp; coachkurtis.com</p>
     </div></div>

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Game Time Check | Coach Kurtis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #CC0000; --red-dark: #990000; --black: #0D0D0D; --white: #FFFFFF;
+    --off-white: #F7F7F7; --light-grey: #E8E8E8; --mid-grey: #888888;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--off-white); color: var(--black); font-family: 'Montserrat', sans-serif; font-size: 16px; line-height: 1.6; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  .mono { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+
+  header { background: var(--black); color: var(--white); padding: 40px 32px 44px; }
+  .brandline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; }
+  .brandline .mono:first-child { color: var(--mid-grey); }
+  .brandline .mono:last-child { color: var(--red); }
+  h1 { font-weight: 900; font-size: 40px; line-height: 1.1; margin: 10px 0 16px; }
+  h1 span { color: var(--red); }
+  header p { color: #BBBBBB; font-size: 17px; max-width: 560px; }
+
+  main { padding: 32px 16px 8px; }
+  .intro { background: var(--white); border-left: 4px solid var(--red); border-radius: 0 12px 12px 0; padding: 24px 28px; margin-bottom: 24px; font-weight: 600; font-size: 17px; }
+  .intro small { display: block; margin-top: 10px; font-weight: 400; font-size: 15px; color: var(--mid-grey); }
+
+  .card { background: var(--white); border: 1px solid var(--light-grey); border-radius: 12px; padding: 32px; margin-bottom: 20px; break-inside: avoid; }
+  .card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .badge { flex: 0 0 36px; height: 36px; background: var(--red); color: var(--white); font-weight: 800; font-size: 18px; display: grid; place-items: center; border-radius: 4px; }
+  .badge.dark { background: var(--black); }
+  h2 { font-weight: 800; font-size: 23px; line-height: 1.2; }
+  h3 { margin: 20px 0 10px; color: var(--mid-grey); }
+  .card p { margin-bottom: 12px; }
+
+  ul.check { list-style: none; }
+  ul.check li { position: relative; padding: 9px 0 9px 36px; border-bottom: 1px solid var(--light-grey); cursor: pointer; user-select: none; }
+  ul.check li:last-child { border-bottom: 0; }
+  ul.check li::before { content: ""; position: absolute; left: 0; top: 12px; width: 20px; height: 20px; border: 2px solid var(--black); border-radius: 3px; background: var(--white); }
+  ul.check li.done::before { background: var(--red); border-color: var(--red); }
+  ul.check li.done::after { content: ""; position: absolute; left: 7px; top: 15px; width: 6px; height: 11px; border: solid var(--white); border-width: 0 3px 3px 0; transform: rotate(45deg); }
+  ul.check li.done { color: var(--mid-grey); }
+
+  ul.dots { list-style: none; }
+  ul.dots li { position: relative; padding: 8px 0 8px 24px; }
+  ul.dots li::before { content: ""; position: absolute; left: 0; top: 17px; width: 9px; height: 9px; background: var(--red); }
+  .q { font-weight: 600; }
+
+  .avoid { background: var(--off-white); border-radius: 8px; padding: 14px 18px; margin-top: 14px; font-size: 15px; }
+  .avoid strong { color: var(--red); }
+  .quote { font-weight: 800; font-size: 20px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--light-grey); }
+  .quote small { display: block; font-weight: 400; font-size: 14px; color: var(--mid-grey); }
+  .verdict { background: var(--black); color: var(--white); border-radius: 8px; padding: 18px 20px; margin-top: 16px; font-weight: 600; }
+
+  .bench { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .bench div { border: 1px solid var(--light-grey); border-radius: 8px; padding: 16px; }
+  .bench .mono { color: var(--red); display: block; margin-bottom: 6px; }
+  .bench p { font-size: 15px; margin: 0; }
+
+  .notes { margin-top: 16px; }
+  .notes .line { border-bottom: 1px solid var(--light-grey); height: 34px; }
+
+  .cta { background: var(--red); color: var(--white); padding: 40px 32px; text-align: center; margin-top: 12px; }
+  .cta h2 { font-size: 26px; margin-bottom: 12px; }
+  .cta p { max-width: 520px; margin: 0 auto 24px; }
+  .btn { display: inline-block; background: var(--black); color: var(--white); text-decoration: none; font-weight: 700; font-size: 16px; padding: 16px 32px; border-radius: 6px; }
+  .btn:hover { background: #333333; }
+  .cta .url { display: block; margin-top: 14px; font-family: 'Space Mono', monospace; font-size: 13px; color: var(--white); }
+
+  footer { background: var(--black); color: var(--white); padding: 22px 32px; text-align: center; font-size: 13px; }
+  .tools { text-align: center; padding: 8px 16px 28px; }
+  .print { background: var(--white); border: 1px solid var(--light-grey); font: 700 14px 'Montserrat', sans-serif; padding: 10px 22px; border-radius: 6px; cursor: pointer; }
+
+  @media (max-width: 600px) {
+    header { padding: 28px 20px 32px; }
+    h1 { font-size: 32px; }
+    .card { padding: 24px 20px; }
+    .bench { grid-template-columns: 1fr; }
+    .cta { padding: 32px 20px; }
+  }
+  @media print {
+    body { background: var(--white); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    main { padding: 20px 0 0; }
+    .tools { display: none; }
+    .card { padding: 22px; margin-bottom: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brandline"><span class="mono">Parent Checklist</span><span class="mono">Coach Kurtis</span></div>
+  <h1>The <span>Game Time</span> Check</h1>
+  <p>What to do when your child is not getting game time. Four steps, the exact questions to ask, and the red flags to watch for.</p>
+</header>
+
+<main>
+  <div class="intro">
+    I've been the coach deciding who goes on. I've also been the dad watching my own son fight for minutes at a JPL team. This is the checklist I'd want in your pocket.
+    <small>Work through it in order. Don't jump straight to step four. Tap any box to tick it off.</small>
+  </div>
+
+  <section class="card">
+    <div class="card-head"><div class="badge dark">!</div><h2>First, what does fair game time look like?</h2></div>
+    <div class="bench">
+      <div><span class="mono">Under 7 to 11</span><p>The FA's goal at these ages is equal playing time for everyone.</p></div>
+      <div><span class="mono">JPL</span><p>At least 50% of every match a player is selected for.</p></div>
+      <div><span class="mono">Under 12 and up</span><p>Selection matters more. Your child still deserves an explanation.</p></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><div class="badge">1</div><h2>Ask the coach, the right way</h2></div>
+    <h3 class="mono">Before you ask</h3>
+    <ul class="check">
+      <li>Not on the touchline.</li>
+      <li>Not straight after a defeat.</li>
+      <li>Not in the team WhatsApp group.</li>
+      <li>Ask for five minutes away from training instead.</li>
+    </ul>
+    <h3 class="mono">Questions to ask</h3>
+    <ul class="dots">
+      <li class="q">"What does my child need to work on to get more minutes?"</li>
+      <li class="q">"Where do you see them in the squad right now?"</li>
+      <li class="q">"What could they work on outside team training?"</li>
+      <li class="q">"Is there anything we can help with at home?"</li>
+      <li class="q">"When would be a good time to check in again?"</li>
+    </ul>
+    <div class="avoid"><strong>Avoid:</strong> "Why isn't my child playing?" It puts the coach on the defensive and you'll learn far less.</div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><div class="badge">2</div><h2>Act on what you hear</h2></div>
+    <ul class="check">
+      <li>Write down what the coach said, in their words.</li>
+      <li>Pick one or two things to work on. Not ten.</li>
+      <li>Have an honest chat with your child. Here's the area, here's maybe why, here's what we can do.</li>
+      <li>Find extra football outside team training. The park, the garden, or one to one sessions.</li>
+      <li>Check back in with the coach after a few weeks.</li>
+    </ul>
+    <div class="notes">
+      <h3 class="mono">What the coach told us</h3>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="quote">"For things to change, we have to change."<small>What I told my own son.</small></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><div class="badge">3</div><h2>Watch for the real red flag</h2></div>
+    <p>Low minutes on their own aren't the warning sign. Low minutes plus no feedback is. Tick any that are true.</p>
+    <ul class="check">
+      <li>My child is hardly getting on, week after week.</li>
+      <li>I've asked the coach and got no clear reason.</li>
+      <li>I'm not told how my child is progressing.</li>
+      <li>My child hasn't been given anything to work on.</li>
+      <li>I have no idea how I could help at home.</li>
+      <li>My child's confidence or enjoyment is dropping.</li>
+    </ul>
+    <div class="verdict">Ticked most of these after an honest conversation and some real work? Move to step four.</div>
+    <div class="avoid"><strong>Remember:</strong> during training and matches, step away. That's for the coach and your child to work out.</div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><div class="badge">4</div><h2>Before you move clubs, do your homework</h2></div>
+    <h3 class="mono">Questions to ask a new club</h3>
+    <ul class="dots">
+      <li class="q">"Who would actually coach my child?"</li>
+      <li class="q">"How do you develop players at this age?"</li>
+      <li class="q">"How do you decide game time?"</li>
+      <li class="q">"How do you keep parents updated on progress?"</li>
+      <li class="q">"Can my child come to a few sessions before we commit?"</li>
+    </ul>
+    <h3 class="mono">Check yourself</h3>
+    <ul class="check">
+      <li>I've watched my child in a few sessions there.</li>
+      <li>The level is close to where my child is now.</li>
+      <li>I'm confident they'll actually get chances to play.</li>
+      <li>I'm moving for the right environment, not the first team that said yes.</li>
+    </ul>
+  </section>
+</main>
+
+<div class="tools"><button class="print" onclick="window.print()">Print or save as PDF</button></div>
+
+<section class="cta">
+  <h2>Want more of this?</h2>
+  <p>The Game Intelligence Lab is a free community for parents who want to understand how their child develops as a footballer. Join us for more guides like this one.</p>
+  <a class="btn" href="https://www.skool.com/ngc-player-lab-5149">Join the GI Lab. It's Free</a>
+  <span class="url">skool.com/ngc-player-lab-5149</span>
+</section>
+
+<footer>Coach Kurtis | coachkurtis.com | Next Generation Champions Ltd</footer>
+
+</div>
+<script>
+  document.querySelectorAll('ul.check li').forEach(function (li) {
+    li.addEventListener('click', function () { li.classList.toggle('done'); });
+  });
+</script>
+</body>
+</html>
